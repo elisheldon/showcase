@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext as _
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class LoginForm(forms.Form):
     username = forms.CharField(label = _('Username'))
@@ -20,16 +20,16 @@ class RegistrationForm(forms.Form):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         try:
-            User.objects.get(username = username)
-        except User.DoesNotExist:
+            get_user_model().objects.get(username = username)
+        except get_user_model().DoesNotExist:
             return username
         raise forms.ValidationError(_('This username is already in use, please try another.'))
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         try:
-            User.objects.get(email = email)
-        except User.DoesNotExist:
+            get_user_model().objects.get(email = email)
+        except get_user_model().DoesNotExist:
             return email
         raise forms.ValidationError(_('This email address is already associated with an account.'))
 

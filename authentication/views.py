@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from teacher.models import Teacher
 from student.models import Student
@@ -46,7 +46,7 @@ def register(request):
             firstName = form.cleaned_data.get('firstName')
             lastName = form.cleaned_data.get('lastName')
 
-            user = User.objects.create_user(username, email, password1)
+            user = get_user_model().objects.create_user(username, email, password1)
             user.first_name = firstName
             user.last_name = lastName
             user.save()
