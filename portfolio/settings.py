@@ -131,3 +131,5 @@ MESSAGE_TAGS = {
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AUTH_USER_MODEL = 'authentication.PortfolioUser'
+
+LOGIN_URL = '/'

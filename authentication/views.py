@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.utils.translation import gettext as _
 
 from teacher.models import Teacher
 from student.models import Student
@@ -25,10 +26,10 @@ def loginUser(request):
             login(request, user)
             return HttpResponse('Hello logged in user!')
         else:
-            messages.add_message(request, messages.ERROR, 'Your username or password is incorrect, please try again.')
+            messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))
             return HttpResponseRedirect(reverse('authentication:index'))
     else:
-        messages.add_message(request, messages.ERROR, 'There was an error logging you in, please try again.')
+        messages.add_message(request, messages.ERROR, _('There was an error logging you in, please try again.'))
         return HttpResponseRedirect(reverse('authentication:index'))
 
 def logoutUser(request):
