@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}{% trans 'Log in' %}{% endblock %}
+
+{% block body %}
+<h2>{% trans 'Log in' %}</h2>
+<form action='{% url "authentication:loginUser" %}' method='post'>
+  {% csrf_token %}
+  {{ form|crispy }}
+  <button type='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
+</form>
+<br><a href='{% url "authentication:register" %}' class='btn btn-primary'>{% trans 'Register' %}</a>
+{% endblock %}
