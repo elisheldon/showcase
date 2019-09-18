@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 from teacher.models import Teacher
 from student.models import Student
@@ -49,13 +50,18 @@ def register(request):
             user = get_user_model().objects.create_user(username, email, password1)
             user.first_name = firstName
             user.last_name = lastName
-            user.save()
             if userType == 'student':
+                group = Group.objects.get(name='students')
+                user.groups.add(group)
+                user.save()
                 student = Student(user = user)
                 student.save()
                 login(request, user)
                 return HttpResponseRedirect(reverse('student:index'))
             elif userType == 'teacher':
+                group = Group.objects.get(name='teachers')
+                user.groups.add(group)
+                user.save()
                 teacher = Teacher(user = user)
                 teacher.save()
                 login(request, user)
