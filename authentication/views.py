@@ -24,7 +24,12 @@ def loginUser(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponse('Hello logged in user!')
+            if request.user.groups.filter(name='students').exists():
+                return HttpResponseRedirect(reverse('student:index'))
+            elif request.user.groups.filter(name='teachers').exists():
+                return HttpResponseRedirect(reverse('teachers:index'))
+            else:
+                return HttpResponse('You are not a student or a teacher.')
         else:
             messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))
             return HttpResponseRedirect(reverse('authentication:index'))

@@ -16,8 +16,9 @@
     <span class='navbar-brand'>Portfolio</span>
     {% block navlinks %}{% endblock %}
     {% if request.user.is_authenticated %}
+      <a class="nav-item nav-link" href='{% url "authentication:logoutUser" %}'>Log out</a>
       <div class='ml-auto'>
-        <span class='nav-item nav-link'>{{ request.user.firstNamee }}</span>
+        <span class='nav-item nav-link'>{{ request.user.first_name }}</span>
       </div>
     {% endif %}
   </nav>
