@@ -22,7 +22,7 @@ class Item(models.Model):
         Student,
         on_delete = models.CASCADE,
     )
-    dateTimeAdded = models.DateTimeField(
+    date_time_added = models.DateTimeField(
         auto_now_add = True,
     )
     title = models.CharField(
@@ -33,13 +33,13 @@ class Item(models.Model):
         max_length = 1024,
         blank = True,
     )
-    itemType = models.ForeignKey(
+    item_type = models.ForeignKey(
         ContentType,
         limit_choices_to = models.Q(app_label = 'student', model = 'link') | models.Q(app_label = 'student', model = 'gallery'),
         on_delete = models.CASCADE,
     )
-    itemId = models.PositiveIntegerField()
-    item = GenericForeignKey('itemType', 'itemId')
+    item_id = models.PositiveIntegerField()
+    item = GenericForeignKey('item_type', 'item_id')
 
 class Link(models.Model):
     url = models.URLField(
@@ -47,7 +47,7 @@ class Link(models.Model):
     )
 
 class Gallery(models.Model):
-    tempLocation = models.CharField(
+    temp_location = models.CharField(
         max_length = 512,
     )
 

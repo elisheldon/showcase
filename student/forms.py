@@ -10,21 +10,21 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 class AddForm(forms.Form):
-    title = forms.CharField(label = _('Title'))
-    description = forms.CharField(widget=forms.Textarea, required=False)
-    itemTypeChoices = (('link', _('Link')),('gallery', _('Photos')))
-    itemType = forms.ChoiceField(label = _('Type'), choices = itemTypeChoices)
+    title = forms.CharField(label = _('Title'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
+    item_type_choices = (('link', _('Link')),('gallery', _('Photos')))
+    item_type = forms.ChoiceField(label = _('Type'), choices = item_type_choices)
 
     # link inputs
-    url = forms.CharField(label = _('URL'), required=False, validators=[OptionalSchemeURLValidator()])
+    url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()])
 
     # gallery inputs
-    tempLocation = forms.CharField(required=False)
+    temp_location = forms.CharField(required=False)
 
     def clean_url(self):
         url = self.cleaned_data.get('url')
-        itemType = self.cleaned_data.get('itemType')
-        if url == '' and itemType == 'link':
+        item_type = self.cleaned_data.get('item_type')
+        if url == '' and item_type == 'link':
             raise forms.ValidationError(
                 _('Make sure to include the URL you want to add.'),
             )
@@ -33,10 +33,10 @@ class AddForm(forms.Form):
         return url
 
     def clean_tempLocation(self):
-        tempLocation = self.cleaned_data.get('tempLocation')
-        itemType = self.cleaned_data.get('itemType')
-        if tempLocation == '' and itemType == 'gallery':
+        temp_location = self.cleaned_data.get('temp_location')
+        item_type = self.cleaned_data.get('item_type')
+        if temp_location == '' and item_type == 'gallery':
             raise forms.ValidationError(
-                _('Make sure to include the tempLocation you want to add.'),
+                _('Make sure to include the temp_location you want to add.'),
             )
-        return tempLocation
+        return temp_location

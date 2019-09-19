@@ -4,16 +4,16 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label = _('Username'))
+    username = forms.CharField(label = _('Username'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
     password = forms.CharField(label = _('Password'), widget = forms.PasswordInput)
 
 class RegistrationForm(forms.Form):
-    username = forms.CharField(label = _('Username'))
-    firstName = forms.CharField(label = _('First name'))
-    lastName = forms.CharField(label = _('Last name'))
+    username = forms.CharField(label = _('Username'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
+    first_name = forms.CharField(label = _('First name'))
+    last_name = forms.CharField(label = _('Last name'))
     email = forms.EmailField(label = _('Email address'))
-    userTypeChoices = (('student',_('Student')),('teacher',_('Teacher')))
-    userType = forms.ChoiceField(label = _('I am a...'), choices = userTypeChoices)
+    user_type_choices = (('student',_('Student')),('teacher',_('Teacher')))
+    user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
     password1 = forms.CharField(label = _('Password'), widget = forms.PasswordInput)
     password2 = forms.CharField(label = _('Confirm password'), help_text=_('Enter the same password as above, for verification.'), widget = forms.PasswordInput)
 

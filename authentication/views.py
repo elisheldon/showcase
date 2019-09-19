@@ -49,13 +49,13 @@ def register(request):
             email = form.cleaned_data.get('email')
             password1 = form.cleaned_data.get('password1')
             password2 = form.cleaned_data.get('password2')
-            userType = form.cleaned_data.get('userType')
-            firstName = form.cleaned_data.get('firstName')
-            lastName = form.cleaned_data.get('lastName')
+            user_type = form.cleaned_data.get('user_type')
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
 
             user = get_user_model().objects.create_user(username, email, password1)
-            user.first_name = firstName
-            user.last_name = lastName
+            user.first_name = first_name
+            user.last_name = last_name
             if userType == 'student':
                 group = Group.objects.get(name='students')
                 user.groups.add(group)

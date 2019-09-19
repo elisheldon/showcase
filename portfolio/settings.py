@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'student.apps.StudentConfig',
     'teacher.apps.TeacherConfig',
     'authentication.apps.AuthenticationConfig',
+    'preview.apps.PreviewConfig',
     'crispy_forms',
 ]
 
@@ -123,6 +124,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'preview/static/'),
+]
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

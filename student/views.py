@@ -10,10 +10,10 @@ from .forms import AddForm
 
 def student_check(request):
     # checks to see if the current user is in the students group
-    isStudent = request.user.groups.filter(name='students').exists()
-    if not isStudent:
-        messages.add_message(request, messages.ERROR, _('You attempted to access a student page, but you are not a student. Log in as a student and try again.'))
-    return isStudent
+    is_student = request.user.groups.filter(name='students').exists()
+    if not is_student:
+        messages.add_message(request, messages.ERROR, _('You attempted to access a student page, but you are not logged in as a student. Log in as a student and try again.'))
+    return is_student
 
 # Create your views here.
 def index(request):

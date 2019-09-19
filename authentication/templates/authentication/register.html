@@ -7,7 +7,7 @@
 
 {% block body %}
 <h2>{% trans 'Register' %}</h2>
-<form action='{% url "authentication:register" %}' method='post'>
+<form action='{% url "authentication:register" %}' method='post' autocomplete='off'>
   {% csrf_token %}
   {{ form|crispy }}
   <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>

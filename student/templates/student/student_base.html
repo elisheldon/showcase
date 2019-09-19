@@ -2,7 +2,14 @@
 
 {% load i18n %}
 
+{% block scripts %}
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.2.0/handlebars.min.js'></script>
+{% endblock %}
+
 {% block navlinks %}
-    <a class="nav-item nav-link" href='{% url "student:index" %}'>My portfolio</a>
-    <a class="nav-item nav-link" href='{% url "student:add" %}'>Add item</a>
+  <a class="nav-item nav-link" href='{% url "student:index" %}'>My portfolio</a>
+  <a class="nav-item nav-link" href='{% url "student:add" %}'>Add item</a>
+{% endblock %}
+
+{% block handlebar %}
 {% endblock %}
