@@ -12,4 +12,13 @@
 {% endblock %}
 
 {% block handlebar %}
+  {% verbatim %}
+    <script id='hb_url_preview' type="text/x-handlebars-template">
+      <div>
+        <h3>{{ title }}</h3>
+        {{ description }}
+        <img src='{{ image }}' height=200 alt='Picture of {{ title }}'>
+      </div>
+    </script>
+  {% endverbatim %}
 {% endblock %}

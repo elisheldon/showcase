@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderItemOptions(0)
   document.getElementById('id_item_type').addEventListener('change', () => renderItemOptions(300))
+  /*document.getElementById('id_url').addEventListener('change', () => {
+
+  })*/
 })
 
 const renderItemOptions = duration => {

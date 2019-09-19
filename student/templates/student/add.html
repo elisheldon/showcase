@@ -21,6 +21,7 @@
 <form action='{% url "student:add" %}' method='post' autocomplete='off'>
   {% csrf_token %}
   {{ form|crispy }}
+  <div id='previewDiv'></div>
   <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
 </form>
 {% endblock %}
