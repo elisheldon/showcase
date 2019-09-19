@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import gettext as _
 
 from student.models import Student
+from .forms import AddForm
 
 def student_check(request):
     # checks to see if the current user is in the students group
@@ -23,5 +24,11 @@ def index(request):
 def add(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
-    return render(request, 'student/add.html')
+    if request.method == 'POST':
+        form = AddForm(request.POST)
+        if form.is_valid():
+            return HttpResponse(form.cleaned_data.get('url'))
+    else:
+        form = AddForm()
+    return render(request, 'student/add.html', {'form': form})
 
