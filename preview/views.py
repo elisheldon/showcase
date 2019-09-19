@@ -5,5 +5,5 @@ from json import loads
 # Create your views here.
 def index(request):
     url = loads(request.body)['url']
-    title, description, image = web_preview(url, parser='html.parser')
+    title, description, image = web_preview(url, parser='html.parser', headers = {'User-Agent': 'Mozilla/5.0'})
     return JsonResponse({'title': title, 'description': description, 'image': image})

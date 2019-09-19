@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% load i18n %}
 
 {% block scripts %}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.2.0/handlebars.min.js'></script>
+  <script src='{% static "preview/preview.js" %}'></script>
 {% endblock %}
 
 {% block navlinks %}
@@ -14,11 +16,14 @@
 {% block handlebar %}
   {% verbatim %}
     <script id='hb_url_preview' type="text/x-handlebars-template">
-      <div>
-        <h3>{{ title }}</h3>
-        {{ description }}
-        <img src='{{ image }}' height=200 alt='Picture of {{ title }}'>
+      <div class='card' style='width: 300px'>
+        <img src='{{ image }}' class='card-img-top' alt='Picture from {{ title }}'>
+        <div class='card-body'>
+          <h5 class="card-title">{{ title }}</h5>
+          <p class="card-text">{{ description }}</p>
+        </div>
       </div>
+      <br>
     </script>
   {% endverbatim %}
 {% endblock %}
