@@ -1,13 +1,39 @@
+let titleManuallyChanged = false
+let descriptionManuallyChanged = false
+
 document.addEventListener('DOMContentLoaded', () => {
   renderItemOptions(0)
   document.getElementById('id_item_type').addEventListener('change', () => renderItemOptions(300))
-  document.getElementById('id_url').addEventListener('keyup', () => {
-    url = document.getElementById('id_url').value
-    if(validUrl(url)){
-      renderPreview(url, '#previewDiv')
-    }
+  $('#id_url').typeWatch( typewatch_options )
+  document.getElementById('id_title').addEventListener('keyup', () => {
+    titleManuallyChanged = true
+    document.getElementById('card_title').innerHTML = document.getElementById('id_title').value
   })
+  document.getElementById('id_description').addEventListener('keyup', () => {
+    descriptionManuallyChanged = true
+    document.getElementById('card_description').innerHTML = document.getElementById('id_description').value
+  })
+  document.getElementById('clear_form_btn').addEventListener('click', clearForm)
 })
+
+const createUrlPreview = async () => {
+  const url = document.getElementById('id_url').value
+  if(validUrl(url)){
+    const data = await renderUrlPreview(url, '#previewDiv')
+    if(!titleManuallyChanged && !descriptionManuallyChanged){
+      document.getElementById('id_title').value = data.title
+      document.getElementById('id_description').value = data.description
+    }
+  }
+}
+
+const typewatch_options = {
+  callback: createUrlPreview,
+  wait: 500,
+  highlight: true,
+  allowSubmit: false,
+  captureLength: 4
+}
 
 const renderItemOptions = duration => {
   const item_type = document.getElementById('id_item_type').value
@@ -23,6 +49,13 @@ const renderItemOptions = duration => {
       })
       break
   }
+}
+
+const clearForm = () => {
+  document.getElementById('add_form').reset()
+  titleManuallyChanged = false
+  descriptionManuallyChanged = false
+  $('#previewDiv').html('')
 }
 
 //https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url

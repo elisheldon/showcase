@@ -6,6 +6,7 @@
 
 {% block scripts %}
   {{ block.super }}
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/TypeWatch/3.0.1/jquery.typewatch.min.js'></script>
   <script src='{% static "student/add.js" %}'></script>
   <script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>
   <script>
@@ -16,11 +17,16 @@
 {% block title %}{% trans 'Add an Item' %}{% endblock %}
 
 {% block body %}
-<h2>{% trans 'Add an Item' %}</h2>
-<form action='{% url "student:add" %}' method='post' autocomplete='off'>
-  {% csrf_token %}
-  {{ form|crispy }}
-  <div id='previewDiv'></div>
-  <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
-</form>
+  <h2>{% trans 'Add an Item' %}</h2>
+  <div class='row'>
+    <div class='col-lg-6 col-sm-12'>
+      <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off'>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type='button' id='clear_form_btn' class='btn btn-primary'>Clear</button>
+        <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
+      </form>
+    </div>
+    <div class='col-lg-6 col-sm-12' id='previewDiv'></div>
+  </div>
 {% endblock %}

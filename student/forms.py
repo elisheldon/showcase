@@ -10,16 +10,17 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 class AddForm(forms.Form):
-    title = forms.CharField(label = _('Title'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
-    description = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
     item_type_choices = (('link', _('Link')),('gallery', _('Photos')))
     item_type = forms.ChoiceField(label = _('Type'), choices = item_type_choices)
 
     # link inputs
-    url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()])
+    url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()], widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
 
     # gallery inputs
     temp_location = forms.CharField(required=False)
+
+    title = forms.CharField(label = _('Title'))
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
 
     def clean_url(self):
         url = self.cleaned_data.get('url')
