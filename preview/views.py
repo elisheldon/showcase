@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.staticfiles import finders
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -17,7 +17,10 @@ def index(request):
     if banned:
         return JsonResponse({'title': 'This URL has been blocked', 'description': 'Make sure you are only adding school-approriate content to your portfolio - this should be your best work!', 'image': ''})
     # https://github.com/ludbek/webpreview
-    title, description, image = web_preview(url, parser='html.parser', headers = {'User-Agent': 'Mozilla/5.0'})
+    try: 
+        title, description, image = web_preview(url, parser='html.parser', headers = {'User-Agent': 'Mozilla/5.0'})
+    except:
+        return HttpResponseBadRequest()
     return JsonResponse({'title': title, 'description': description, 'image': image})
 
 @staff_member_required

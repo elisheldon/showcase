@@ -1,10 +1,18 @@
 {% load static %}
 
-<div class='card' style='width: 300px'>
-    <img src='{{ item.item.image }}' class='card-img-top' alt='Picture of {{ item.title }}'>
-    <div class='card-body'>
-      <h5 id='card_title' class='card-title'>{{ item.title }}</h5>
-      <p id='card_description' class='card-text'>{{ item.description }}</p>
-    </div>
+<div class='card text-center'>
+  <img src='{{ item.item.image }}' class='card-img-top' alt='Picture of {{ item.title }}'>
+  <div class='card-body text-left'>
+    <h5 id='card_title' class='card-title'>{{ item.title }}</h5>
+    <p id='card_description' class='card-text'>{{ item.description }}</p>
   </div>
-  <br>
+
+  {% if item.item_type|stringformat:"s" == "link" %}
+    <a href='{{ item.item.url }}' class='stretched-link'></a>
+  {% endif %}
+
+  <div class='card-footer text-muted'>
+      Added on {{ item.date_time_added|date }}
+    </div>
+</div>
+<br>

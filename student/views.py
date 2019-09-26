@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -23,7 +23,8 @@ def portfolio(request):
     student = Student.objects.get(user = request.user)
     items = Item.objects.filter(student = student)
     context = {
-        'items': items
+        'items': items,
+        'name': request.user.first_name,
     }
     return render(request, 'student/portfolio.html', context)
 

@@ -6,14 +6,23 @@ const getUrlPreview = async url => {
     body: JSON.stringify({'url': url}),
     headers: { "X-CSRFToken": csrftoken },
   })
+
+  // server will return 400 error if link is unreachable; return null when that happens
+  if(!response.ok){
+    return null
+  }
   const data = await response.json()
+
+  // if we don't get a title back, return nothing
+  if(!data.title){
+    return null
+  }
 
   // if we get a title (indicating a working url) and no image, use default link image (commented out: try to get an image from thum.io)
   if(data.title && !data.image){
     if(url.substring(0,3) != 'http'){
       url = 'http://' + url
     }
-    console.log('would be using thum.io for ' + url)
     data.image = '/static/student/default_images/link.svg'
     //data.image = '//image.thum.io/get/width/300/crop/600/' + url
   }
