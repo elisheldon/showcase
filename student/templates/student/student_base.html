@@ -6,18 +6,19 @@
 {% block scripts %}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.2.0/handlebars.min.js'></script>
   <script src='{% static "preview/preview.js" %}'></script>
+  <script src='{% static "student/card.js" %}'></script>
 {% endblock %}
 
 {% block navlinks %}
-  <a class="nav-item nav-link" href='{% url "student:index" %}'>My portfolio</a>
+  <a class="nav-item nav-link" href='{% url "student:portfolio" %}'>My portfolio</a>
   <a class="nav-item nav-link" href='{% url "student:add" %}'>Add item</a>
 {% endblock %}
 
 {% block handlebar %}
   {% verbatim %}
-    <script id='hb_url_preview' type="text/x-handlebars-template">
+    <script id='hb_card' type="text/x-handlebars-template">
       <div class='card' style='width: 300px'>
-        {{#if image }} <img src='{{ image }}' class='card-img-top' alt='Picture from {{ title }}'> {{/if }}
+        {{#if image }} <img src='{{ image }}' class='card-img-top' alt='Picture of {{ title }}'> {{/if }}
         <div class='card-body'>
           <h5 id='card_title' class='card-title'>{{ title }}</h5>
           <p id='card_description' class='card-text'>{{ description }}</p>

@@ -1,0 +1,18 @@
+{% extends 'student/student_base.html' %}
+
+{% load static %}
+{% load i18n %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/TypeWatch/3.0.1/jquery.typewatch.min.js'></script>
+  <script src='{% static "student/portfolio.js" %}'></script>
+{% endblock %}
+
+{% block title %}{% trans 'My Portfolio' %}{% endblock %}
+
+{% block body %}
+  {% for item in items %}
+    {% include 'student/card.html' %}   
+  {% endfor %}
+{% endblock %}

@@ -45,6 +45,10 @@ class Link(models.Model):
     url = models.URLField(
         max_length = 512,
     )
+    image = models.CharField(
+        max_length = 512,
+        default = settings.STATIC_URL + 'student/default_images/link.svg',
+    )
 
 class Gallery(models.Model):
     temp_location = models.CharField(

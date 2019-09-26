@@ -15,6 +15,7 @@ class AddForm(forms.Form):
 
     # link inputs
     url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()], widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
+    image = forms.CharField(widget = forms.HiddenInput(), required=False)
 
     # gallery inputs
     temp_location = forms.CharField(required=False)
