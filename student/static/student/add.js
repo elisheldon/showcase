@@ -37,6 +37,7 @@ const loadUrlPreview = async () => {
     const data = await getUrlPreview(url)
     if(data){
       document.getElementById('id_image').value = data.image
+      document.getElementById('id_url').value = data.url // in case link shortener was resolved on server
       if(!titleManuallyChanged){
         document.getElementById('id_title').value = data.title
       }

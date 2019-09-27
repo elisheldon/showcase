@@ -1,6 +1,12 @@
 // posts a request with the input url to the preview endpoint, which returns meta info as JSON used to render url preview
 const getUrlPreview = async url => {
-  const csrftoken = Cookies.get('csrftoken');
+  const csrftoken = Cookies.get('csrftoken')
+
+  // if http or https protocol not provided, assume http
+  if(url.substring(0,4) != 'http'){
+    url = 'http://' + url
+  }
+
   const response = await fetch(window.previewUrl,{
     method: 'post',
     body: JSON.stringify({'url': url}),
@@ -20,9 +26,6 @@ const getUrlPreview = async url => {
 
   // if we get a title (indicating a working url) and no image, use default link image (commented out: try to get an image from thum.io)
   if(data.title && !data.image){
-    if(url.substring(0,3) != 'http'){
-      url = 'http://' + url
-    }
     data.image = '/static/student/default_images/link.svg'
     //data.image = '//image.thum.io/get/width/300/crop/600/' + url
   }
