@@ -13,18 +13,3 @@
   <a class="nav-item nav-link" href='{% url "student:portfolio" %}'>My portfolio</a>
   <a class="nav-item nav-link" href='{% url "student:add" %}'>Add item</a>
 {% endblock %}
-
-{% block handlebar %}
-  {% verbatim %}
-    <script id='hb_card' type="text/x-handlebars-template">
-      <div class='card' style='width: 300px'>
-        {{#if image }} <img src='{{ image }}' class='card-img-top' alt='Picture of {{ title }}'> {{/if }}
-        <div class='card-body'>
-          <h5 id='card_title' class='card-title'>{{ title }}</h5>
-          <p id='card_description' class='card-text'>{{ description }}</p>
-        </div>
-      </div>
-      <br>
-    </script>
-  {% endverbatim %}
-{% endblock %}

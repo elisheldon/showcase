@@ -25,7 +25,7 @@ def loginUser(request):
         if user is not None:
             login(request, user)
             if request.user.groups.filter(name='students').exists():
-                return HttpResponseRedirect(reverse('student:index'))
+                return HttpResponseRedirect(reverse('student:portfolio'))
             elif request.user.groups.filter(name='teachers').exists():
                 return HttpResponseRedirect(reverse('teachers:index'))
             else:

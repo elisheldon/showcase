@@ -6,9 +6,12 @@
 {% block scripts %}
   {{ block.super }}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/TypeWatch/3.0.1/jquery.typewatch.min.js'></script>
-  <script src='{% static "student/portfolio.js" %}'></script>
+  <script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/portfolio.css" %}'></style>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'></style>
+  <script>
+      window.removeUrl = '{% url "student:remove" %}';
+  </script>
 {% endblock %}
 
 {% block title %}{% trans 'My Portfolio' %}{% endblock %}
@@ -17,7 +20,7 @@
   <h2>{{ name }}'s Portfolio</h2>
   <br>
   <div class="card-columns">
-  {% for item in items %}
+  {% for item in items|dictsortreversed:'date_time_added' %}
     {% include 'student/card.html' %}   
   {% endfor %}
   </div>

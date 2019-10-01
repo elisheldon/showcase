@@ -30,5 +30,13 @@ const getUrlPreview = async url => {
     //data.image = '//image.thum.io/get/width/300/crop/600/' + url
   }
 
+  if(data.title.length > 128){
+    data.title = data.title.substring(0, 125) + '...'
+  }
+
+  if(data.description.length > 256){
+    data.description = data.description.substring(0, 253) + '...'
+  }
+
   return data
 }

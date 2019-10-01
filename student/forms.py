@@ -10,8 +10,8 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 class AddForm(forms.Form):
-    item_type_choices = (('link', _('Link')),('gallery', _('Photos')))
-    item_type = forms.ChoiceField(label = _('Type'), choices = item_type_choices)
+    sub_item_type_choices = (('link', _('Link')),('gallery', _('Photos')))
+    sub_item_type = forms.ChoiceField(label = _('Type'), choices = sub_item_type_choices)
 
     # link inputs
     url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()], widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
@@ -20,23 +20,23 @@ class AddForm(forms.Form):
     # gallery inputs
     temp_location = forms.CharField(required=False)
 
-    title = forms.CharField(label = _('Title'))
-    description = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=False)
+    title = forms.CharField(label = _('Title'), max_length=128)
+    description = forms.CharField(label = _('Description'), widget=forms.Textarea(attrs={'rows':3}), required=False, max_length=256)
 
     def clean_url(self):
         url = self.cleaned_data.get('url')
-        item_type = self.cleaned_data.get('item_type')
-        if url == '' and item_type == 'link':
+        sub_item_type = self.cleaned_data.get('sub_item_type')
+        if url == '' and sub_item_type == 'link':
             raise forms.ValidationError(
                 _('Make sure to include the URL you want to add.'),
             )
-        if url[0:3] != 'http':
+        if url[0:4] != 'http':
             url = 'http://' + url
         return url
 
     def clean_tempLocation(self):
         temp_location = self.cleaned_data.get('temp_location')
-        item_type = self.cleaned_data.get('item_type')
+        sub_item_type = self.cleaned_data.get('sub_item_type')
         if temp_location == '' and item_type == 'gallery':
             raise forms.ValidationError(
                 _('Make sure to include the temp_location you want to add.'),

@@ -3,6 +3,7 @@
   width: auto;
   max-width: 100%;
   padding: 5%;
+  object-fit: contain;
 }
 
 .card{
@@ -15,4 +16,10 @@
 
 .card-body{
   padding-top: 0;
+}
+
+.removeLink {
+  text-decoration: none !important;
+  float: right;
+  color: silver;
 }

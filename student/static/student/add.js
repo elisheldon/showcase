@@ -3,10 +3,10 @@ let descriptionManuallyChanged = false
 
 document.addEventListener('DOMContentLoaded', () => {
   // hide form elements not related to first item type immediately
-  renderItemOptions(0)
+  renderSubItemOptions(0)
 
   // add event to hide form elements not related to selected item type over 300ms
-  document.getElementById('id_item_type').addEventListener('change', () => renderItemOptions(300))
+  document.getElementById('id_sub_item_type').addEventListener('change', () => renderSubItemOptions(300))
 
   // add event to preview url after user stops typing for 500ms
   $('#id_url').typeWatch( typewatch_options )
@@ -18,12 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if(document.getElementById('card_title')){
       document.getElementById('card_title').innerHTML = document.getElementById('id_title').value
     }
+    checkSubmitReady()
   })
   
   // add event to update card preview's description text when user changes description in form
   document.getElementById('id_description').addEventListener('keyup', () => {
     descriptionManuallyChanged = document.getElementById('id_description').value ? true : false
-    document.getElementById('card_description').innerHTML = document.getElementById('id_description').value
+    if(document.getElementById('card_description')){
+      document.getElementById('card_description').innerHTML = document.getElementById('id_description').value
+    }
   })
   
   // add event to clear form when user clicks clear button
@@ -41,9 +44,17 @@ const loadUrlPreview = async () => {
       if(!titleManuallyChanged){
         document.getElementById('id_title').value = data.title
       }
+      else{
+        data.title = document.getElementById('id_title').value
+      }
       if(!descriptionManuallyChanged){
         document.getElementById('id_description').value = data.description
       }
+      else{
+        data.description = document.getElementById('id_description').value
+      }
+      const today = new Date // to render footer on preview card
+      data.date = today.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
       const html = renderCard(data)
       $('#previewDiv').html(html)
     }
@@ -57,6 +68,7 @@ const loadUrlPreview = async () => {
       document.getElementById('id_description').value = ''   
     }
   }
+  checkSubmitReady()
 }
 
 const typewatch_options = {
@@ -68,9 +80,9 @@ const typewatch_options = {
 }
 
 // hide and show relevant form inputs based on item type
-const renderItemOptions = duration => {
-  const item_type = document.getElementById('id_item_type').value
-  switch(item_type){
+const renderSubItemOptions = duration => {
+  const sub_item_type = document.getElementById('id_sub_item_type').value
+  switch(sub_item_type){
     case 'link':
       $('#div_id_temp_location').fadeOut(duration, function(){
         $('#div_id_url').fadeIn(duration)
@@ -84,12 +96,31 @@ const renderItemOptions = duration => {
   }
 }
 
+// checks to see if the form is ready for submission, enabling or disabling submit button
+const checkSubmitReady = () => {
+  let ready = true
+  if(!document.getElementById('id_title').value){
+    ready = false
+  }
+  const sub_item_type = document.getElementById('id_sub_item_type').value
+  switch(sub_item_type){
+    case 'link':
+      if(!validUrl(document.getElementById('id_url').value)){
+        ready = false
+      }
+      break
+    case 'gallery':
+  }
+  document.getElementById('submit_form_btn').disabled = !ready
+}
+
 // resets form, manuallychanged booleans and preview card
 const clearForm = () => {
   document.getElementById('add_form').reset()
   titleManuallyChanged = false
   descriptionManuallyChanged = false
   $('#previewDiv').html('')
+  checkSubmitReady()
 }
 
 // https://www.w3resource.com/javascript-exercises/javascript-regexp-exercise-9.php

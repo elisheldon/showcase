@@ -9,6 +9,7 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/TypeWatch/3.0.1/jquery.typewatch.min.js'></script>
   <script src='{% static "student/add.js" %}'></script>
   <script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>
+  <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'></style>
   <script>
     window.previewUrl = '{% url "preview:index" %}';
   </script>
@@ -23,11 +24,29 @@
       <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off'>
         {% csrf_token %}
         {{ form|crispy }}
-        <button type='button' id='clear_form_btn' class='btn btn-primary'>Clear</button>
-        <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
+        <button type='button' id='clear_form_btn' class='btn btn-primary'>{% trans 'Clear' %}</button>
+        <button type='submit' id='submit_form_btn' disabled class='btn btn-primary'>{% trans 'Submit' %}</button>
         <br><br>
       </form>
     </div>
     <div class='col-lg-6 col-sm-12' id='previewDiv'></div>
   </div>
+{% endblock %}
+
+{% block handlebar %}
+  {% verbatim %}
+    <script id='hb_card' type="text/x-handlebars-template">
+      <div class='card text-center'>
+        {{#if image }} <img src='{{ image }}' class='card-img-top' alt='Picture of {{ title }}'>{{/if }}
+        <div class='card-body text-left'>
+          <h5 id='card_title' class='card-title'>{{ title }}</h5>
+          <p id='card_description' class='card-text'>{{ description }}</p>
+        </div>
+        <div class='card-footer text-muted'>
+          Added on {{ date }}
+        </div>
+      </div>
+      <br>
+    </script>
+  {% endverbatim %}
 {% endblock %}

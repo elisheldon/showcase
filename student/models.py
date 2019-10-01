@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
 from teacher.models import Classroom
@@ -16,6 +16,8 @@ class Student(models.Model):
         blank = True,
         related_name = 'students'
     )
+    def __str__(self):
+        return self.user.username
 
 class Item(models.Model):
     student = models.ForeignKey(
@@ -26,20 +28,22 @@ class Item(models.Model):
         auto_now_add = True,
     )
     title = models.CharField(
+        max_length = 128,
+        blank = True,
+    )
+    description = models.CharField(
         max_length = 256,
         blank = True,
     )
-    description = models.TextField(
-        max_length = 1024,
-        blank = True,
-    )
-    item_type = models.ForeignKey(
+    sub_item_type = models.ForeignKey(
         ContentType,
         limit_choices_to = models.Q(app_label = 'student', model = 'link') | models.Q(app_label = 'student', model = 'gallery'),
         on_delete = models.CASCADE,
     )
-    item_id = models.PositiveIntegerField()
-    item = GenericForeignKey('item_type', 'item_id')
+    sub_item_id = models.PositiveIntegerField()
+    sub_item = GenericForeignKey('sub_item_type', 'sub_item_id')
+    def __str__(self):
+        return self.title + ' (' + self.student.user.username + ')'
 
 class Link(models.Model):
     url = models.URLField(
@@ -49,6 +53,13 @@ class Link(models.Model):
         max_length = 512,
         default = settings.STATIC_URL + 'student/default_images/link.svg',
     )
+    item = GenericRelation(
+        Item,
+        content_type_field='sub_item_type',
+        object_id_field='sub_item_id',
+        )
+    def __str__(self):
+        return self.url + ' (' + self.item.all()[0].student.user.username + ')'
 
 class Gallery(models.Model):
     temp_location = models.CharField(
