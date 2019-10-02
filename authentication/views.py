@@ -10,9 +10,12 @@ from django.utils.translation import gettext as _
 from teacher.models import Teacher
 from student.models import Student
 from .forms import LoginForm, RegistrationForm
+from student.views import student_check
 
 # Create your views here.
 def index(request):
+    if student_check(request):
+        return HttpResponseRedirect(reverse('student:portfolio'))
     form = LoginForm()
     return render(request, 'authentication/index.html', {'form': form})
 
@@ -56,14 +59,13 @@ def register(request):
             user = get_user_model().objects.create_user(username, email, password1)
             user.first_name = first_name
             user.last_name = last_name
-            if userType == 'student':
+            if user_type == 'student':
                 group = Group.objects.get(name='students')
                 user.groups.add(group)
                 user.save()
-                student = Student(user = user)
-                student.save()
+                student = Student.objects.create(user = user)
                 login(request, user)
-                return HttpResponseRedirect(reverse('student:index'))
+                return HttpResponseRedirect(reverse('student:portfolio'))
             elif userType == 'teacher':
                 group = Group.objects.get(name='teachers')
                 user.groups.add(group)

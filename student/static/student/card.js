@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.find('#modal-title-item').html(itemTitle)
     modal.find('#modal-body-item').html('<b>' + itemTitle + '</b>')
     $('#removeButton').click( async () => {
-      console.log('remove button clicked')
       const response = await fetch(window.removeUrl,{
         method: 'post',
         body: JSON.stringify({'item_id': itemId}),

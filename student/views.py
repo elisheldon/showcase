@@ -43,7 +43,7 @@ def add(request):
             sub_item_type = form.cleaned_data.get('sub_item_type')
             if sub_item_type == 'link':
                 url = form.cleaned_data.get('url')
-                image = form.cleaned_data.get('image')# [delete me later if everything is working, otherwise keep everything before the hash AND after the closing bracket] if form.cleaned_data.get('image') else settings.STATIC_URL + 'student/default_images/link.svg'
+                image = form.cleaned_data.get('image')
                 link = Link.objects.create(url = url, image = image)
                 item = Item.objects.create(student = student, sub_item = link, title = title, description = description)
             if sub_item_type == 'gallery':
@@ -72,13 +72,11 @@ def add(request):
 def remove(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
-    try:
-        item_id = loads(request.body)['item_id']
-    except:
-        return HttpResponseBadRequest('Can\'t find that item.')
+    item_id = loads(request.body)['item_id']
     student = Student.objects.get(user = request.user)
-    item = Item.objects.get(pk = item_id, student = student)
-    if not item:
+    try:
+        item = Item.objects.get(pk = item_id, student = student)
+    except:
         raise PermissionDenied
     item.sub_item.delete()
     return HttpResponse(status=204)
