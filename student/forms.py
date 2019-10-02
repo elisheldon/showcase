@@ -18,7 +18,7 @@ class AddForm(forms.Form):
     image = forms.CharField(widget = forms.HiddenInput(), required=False)
 
     # gallery inputs
-    photos = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    photos = forms.ImageField(label = _('Photos*'), widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
 
     title = forms.CharField(label = _('Title'), max_length=128)
     description = forms.CharField(label = _('Description'), widget=forms.Textarea(attrs={'rows':3}), required=False, max_length=256)

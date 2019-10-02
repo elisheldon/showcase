@@ -6,13 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSubItemOptions(0)
 
   // add event to hide form elements not related to selected item type over 300ms
-  document.getElementById('id_sub_item_type').addEventListener('change', () => renderSubItemOptions(300))
+  document.getElementById('id_sub_item_type').addEventListener('change', () => {
+    clearForm()
+    renderSubItemOptions(300)
+  })
 
   // add event to preview url after user stops typing for 500ms
   $('#id_url').typeWatch( typewatch_options )
 
   // add event to check photo uploads
-  document.getElementById('id_photos').addEventListener('change', () => checkSubmitReady())
+  document.getElementById('id_photos').addEventListener('input', () => {
+    checkSubmitReady()
+    renderGalleryPreview()
+  })
 
   // add event to update card preview's title text when user changes title in form
   document.getElementById('id_title').addEventListener('keyup', () => {
@@ -56,10 +62,7 @@ const loadUrlPreview = async () => {
       else{
         data.description = document.getElementById('id_description').value
       }
-      const today = new Date // to render footer on preview card
-      data.date = today.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
-      const html = renderCard(data)
-      $('#previewDiv').html(html)
+      prerenderCard(data)
     }
   }
   else{
@@ -72,6 +75,22 @@ const loadUrlPreview = async () => {
     }
   }
   checkSubmitReady()
+}
+
+const renderGalleryPreview = () => {
+  const data = {title: document.getElementById('id_title').value, description: document.getElementById('id_description').value}
+  const input = document.getElementById('id_photos')
+  if (input.files && input.files[0]) {
+    data.image = URL.createObjectURL(input.files[0])
+  }
+  prerenderCard(data)
+}
+
+const prerenderCard = data => {
+  const today = new Date // to render footer on preview card
+  data.date = today.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+  const html = renderCard(data)
+  $('#previewDiv').html(html)
 }
 
 const typewatch_options = {
@@ -123,7 +142,9 @@ const checkSubmitReady = () => {
 
 // resets form, manuallychanged booleans and preview card
 const clearForm = () => {
+  const subitem = document.getElementById('id_sub_item_type').value
   document.getElementById('add_form').reset()
+  document.getElementById('id_sub_item_type').value = subitem
   titleManuallyChanged = false
   descriptionManuallyChanged = false
   $('#previewDiv').html('')

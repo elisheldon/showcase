@@ -8,7 +8,6 @@ const renderCard = (context) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   const csrftoken = Cookies.get('csrftoken')
-
   // https://getbootstrap.com/docs/4.3/components/modal/
   $('#removeModal').on('show.bs.modal', function (event) {
     const button = $(event.relatedTarget) // Button that triggered the modal
@@ -18,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.find('#modal-title-item').html(itemTitle)
     modal.find('#modal-body-item').html('<b>' + itemTitle + '</b>')
     $('#removeButton').click( async () => {
+      console.log('remove button clicked')
       const response = await fetch(window.removeUrl,{
         method: 'post',
         body: JSON.stringify({'item_id': itemId}),
