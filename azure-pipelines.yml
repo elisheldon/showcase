@@ -1,0 +1,36 @@
+variables:
+  # Replace this name with that of the Azure service connection in your DevOps project
+  ConnectedServiceName: 'Azure'
+
+  # Replace this name to match the name of the App Service you created earlier
+  WebAppName: 'showcaseapp'
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.7'
+    architecture: 'x64'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    verbose: # (no value); this input is optional
+- task: AzureRMWebAppDeployment@4
+  displayName: Azure App Service Deploy
+  inputs:
+    appType: webAppLinux
+    RuntimeStack: 'PYTHON|3.7'
+    ConnectedServiceName: $(ConnectedServiceName)
+    WebAppName: $(WebAppName)
+    Package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+
+    StartupCommand: 'manage.py runserver'
