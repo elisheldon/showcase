@@ -6,8 +6,11 @@ from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.contenttypes.models import ContentType
 from django.utils.six import BytesIO
+from django.test import override_settings
+
 from PIL import Image
 from json import dumps
+import tempfile
 
 from authentication.models import PortfolioUser
 from student.models import Student, Item, Link, Gallery, Photo
@@ -50,6 +53,7 @@ class ModelsTestCase(TestCase):
         item = Item.objects.get(student = student)
         self.assertTrue(item)
     
+    @override_settings(MEDIA_ROOT=tempfile.gettempdir())
     def test_gallery_and_photo_creation(self):
         """Test gallery and photo can be created"""
         user = get_user_model().objects.get(username='test')
@@ -70,6 +74,7 @@ class ModelsTestCase(TestCase):
 
 class StudentTestCase(TestCase):
     @classmethod
+    @override_settings(MEDIA_ROOT=tempfile.gettempdir())
     def setUpTestData(cls):
         # set up immutable data for the whole TestCase
         user = get_user_model().objects.create_user('test', 'test@test.com', 'test')
@@ -146,6 +151,7 @@ class StudentTestCase(TestCase):
         link = Link.objects.get(url = 'http://post.com')
         self.assertTrue(link)
 
+    @override_settings(MEDIA_ROOT=tempfile.gettempdir())
     def test_add_post_gallery(self):
         """Test add view via post with a gallery"""
         image = create_image(None, 'image.png')
@@ -190,7 +196,6 @@ class StudentTestCase(TestCase):
 
     def test_gallery(self):
         """Test the gallery view"""
-        """Test portfolio view"""
         response = self.client.get('/student/gallery/2')
         item = response.context['item']
         gallery = response.context['gallery']
