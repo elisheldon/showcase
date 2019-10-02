@@ -7,8 +7,10 @@
 {% block scripts %}
   {{ block.super }}
   <script src='https://cdnjs.cloudflare.com/ajax/libs/TypeWatch/3.0.1/jquery.typewatch.min.js'></script>
-  <script src='{% static "student/add.js" %}'></script>
   <script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>
+  <script src='{% static "preview/preview.js" %}'></script>
+  <script src='{% static "student/card.js" %}'></script>
+  <script src='{% static "student/add.js" %}'></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'></style>
   <script>
     window.previewUrl = '{% url "preview:index" %}';
@@ -19,9 +21,12 @@
 
 {% block body %}
   <h2>{% trans 'Add an Item' %}</h2>
+  {% for error in form.errors.photos %}
+    <div class='alert alert-danger' role='alert'>{{ error }}</div>
+  {% endfor %}
   <div class='row'>
     <div class='col-lg-6 col-sm-12'>
-      <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off'>
+      <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off' enctype='multipart/form-data'>
         {% csrf_token %}
         {{ form|crispy }}
         <button type='button' id='clear_form_btn' class='btn btn-primary'>{% trans 'Clear' %}</button>

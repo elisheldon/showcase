@@ -18,7 +18,7 @@ class AddForm(forms.Form):
     image = forms.CharField(widget = forms.HiddenInput(), required=False)
 
     # gallery inputs
-    temp_location = forms.CharField(required=False)
+    photos = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
     title = forms.CharField(label = _('Title'), max_length=128)
     description = forms.CharField(label = _('Description'), widget=forms.Textarea(attrs={'rows':3}), required=False, max_length=256)
@@ -33,12 +33,3 @@ class AddForm(forms.Form):
         if url[0:4] != 'http':
             url = 'http://' + url
         return url
-
-    def clean_tempLocation(self):
-        temp_location = self.cleaned_data.get('temp_location')
-        sub_item_type = self.cleaned_data.get('sub_item_type')
-        if temp_location == '' and item_type == 'gallery':
-            raise forms.ValidationError(
-                _('Make sure to include the temp_location you want to add.'),
-            )
-        return temp_location

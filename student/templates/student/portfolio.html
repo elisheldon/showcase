@@ -14,10 +14,10 @@
   </script>
 {% endblock %}
 
-{% block title %}{% trans 'My Portfolio' %}{% endblock %}
+{% block title %}{% trans 'My showcase' %}{% endblock %}
 
 {% block body %}
-  <h2>{{ name }}'s Portfolio</h2>
+  <h2>{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}</h2>
   <br>
   <div class="card-columns">
   {% for item in items|dictsortreversed:'date_time_added' %}

@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // add event to preview url after user stops typing for 500ms
   $('#id_url').typeWatch( typewatch_options )
 
+  // add event to check photo uploads
+  document.getElementById('id_photos').addEventListener('change', () => checkSubmitReady())
+
   // add event to update card preview's title text when user changes title in form
   document.getElementById('id_title').addEventListener('keyup', () => {
     titleManuallyChanged = document.getElementById('id_title').value ? true : false
@@ -84,13 +87,14 @@ const renderSubItemOptions = duration => {
   const sub_item_type = document.getElementById('id_sub_item_type').value
   switch(sub_item_type){
     case 'link':
-      $('#div_id_temp_location').fadeOut(duration, function(){
+      
+      $('#div_id_photos').fadeOut(duration, function(){
         $('#div_id_url').fadeIn(duration)
       })
       break
     case 'gallery':
       $('#div_id_url').fadeOut(duration, function(){
-        $('#div_id_temp_location').fadeIn(duration)
+        $('#div_id_photos').fadeIn(duration)
       })
       break
   }
@@ -110,6 +114,9 @@ const checkSubmitReady = () => {
       }
       break
     case 'gallery':
+      if(document.getElementById('id_photos').files.length == 0){
+        ready = false
+      }
   }
   document.getElementById('submit_form_btn').disabled = !ready
 }

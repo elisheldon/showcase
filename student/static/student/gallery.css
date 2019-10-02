@@ -1,0 +1,22 @@
+.carousel {
+    /* any dimensions are fine, it can be responsive with max-width */
+    width: 400px;
+    height: 400px;
+  }
+  
+  .carousel-inner {
+    /* make sure your .items will get correct height */
+    height: 100%;
+  }
+  
+  .carousel-item {
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .carousel-item img {
+    visibility: hidden;
+  }

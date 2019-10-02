@@ -62,7 +62,25 @@ class Link(models.Model):
         return self.url + ' (' + self.item.all()[0].student.user.username + ')'
 
 class Gallery(models.Model):
-    temp_location = models.CharField(
-        max_length = 512,
+    item = GenericRelation(
+        Item,
+        content_type_field='sub_item_type',
+        object_id_field='sub_item_id',
+    )
+    cover = models.OneToOneField(
+        'Photo',
+        on_delete = models.SET_NULL,
+        blank = True,
+        null = True,
+    )
+
+class Photo(models.Model):
+    image = models.ImageField(
+        upload_to='images/'
+    )
+    parent_gallery = models.ForeignKey(
+        Gallery,
+        on_delete = models.CASCADE,
+        related_name = 'photos'
     )
 

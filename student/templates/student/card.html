@@ -1,9 +1,13 @@
 {% load static %}
 {% load i18n %}
 
-<div class='card text-center' id='card-{{ item.id }}'>
+<div class='card text-center border-primary' id='card-{{ item.id }}'>
   <div style='position: relative'>
-    <img src='{{ item.sub_item.image }}' class='card-img-top' alt='Picture of {{ item.title }}'>
+    {% if item.sub_item_type|stringformat:"s" == "link" %}
+      <img src='{{ item.sub_item.image }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
+    {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
+      <img src='{{ item.sub_item.cover.image.url }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
+    {% endif %}
     <div class='card-body text-left'>
       <h5 id='card_title' class='card-title'>{{ item.title }}</h5>
       <p id='card_description' class='card-text'>{{ item.description }}</p>
@@ -11,13 +15,15 @@
 
     {% if item.sub_item_type|stringformat:"s" == "link" %}
       <a href='{{ item.sub_item.url }}' target='_blank' class='stretched-link'></a>
+    {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
+      <a href='{% url "student:gallery" item.id %}' class='stretched-link'></a>
     {% endif %}
   </div>
 
   <div class='card-footer text-muted text-left'>
     {% trans 'Added on ' %}{{ item.date_time_added|date }}
     <a href='#' class='removeLink' data-toggle='modal' data-target='#removeModal' data-item-title='{{ item.title }}' data-item-id='{{ item.id }}'>
-        <i class='fas fa-trash-alt'></i>
+        <i class='fas fa-trash-alt text-primary'></i>
     </a>
   </div>
 </div>
@@ -33,7 +39,7 @@
         </button>
       </div>
       <div class='modal-body'>
-        {% trans 'Are you sure you want to remove <span id="modal-body-item"></span> from your portfolio? This action cannot be undone.' %}
+        {% trans 'Are you sure you want to remove <span id="modal-body-item"></span> from your showcase? This action cannot be undone.' %}
       </div>
       <div class='modal-footer'>
         <button type='button' class='btn btn-secondary' data-dismiss='modal'>{% trans 'Cancel' %}</button>
