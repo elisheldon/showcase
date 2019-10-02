@@ -1,2 +1,8 @@
-# Portfolio
+# Showcase
 A digital portfolio platform for students, currently in early development
+
+Showcase is a lightweight, student-driven collection of work that represents only those assignments students are proud to share with family, friends and potential employers. In contrast to existing electronic portfolio products, Showcase is not a place for teachers to assign a grade, nor dictate what is included or excluded. Students have complete control over their Showcase portfolio, and never need to include language justifying a low grade or how they plan on improving.
+
+The primary use case of Showcase is to facilitate students collecting and sharing their work during family conferences, particularly in student-led conferences for middle and high school students. Teachers or schools can set up accounts for students if desired, but students will lead the effort of creating their Showcase portfolio. Showcase will allow students to quickly and easily add work from Google Classroom and Microsoft Office, as well as upload images of physical work and link to any publicly accessibly URL.
+
+Showcase is a web-based tool first and foremost, with the potential for mobile apps and browser extensions down the road. Showcase will keep the collection of each student's work as long as they desire, so their Showcase portfolio lives beyond just the semester and can even be used when they start applying to jobs and colleges in high school.
