@@ -33,7 +33,4 @@ steps:
     WebAppName: $(WebAppName)
     Package: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
 
-    # The following parameter is specific to the Flask example code. You may
-    # or may not need a startup command for your own app.
-
-    StartupCommand: 'manage.py runserver --settings=portfolio.settings.production'
+    StartupCommand: 'manage.py runserver'
