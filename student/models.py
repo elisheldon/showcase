@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from uuid import uuid4
 
 from teacher.models import Classroom
 
@@ -76,7 +77,7 @@ class Gallery(models.Model):
 
 class Photo(models.Model):
     image = models.ImageField(
-        upload_to='images/'
+        upload_to='images/'+uuid4().hex+'/'
     )
     parent_gallery = models.ForeignKey(
         Gallery,
