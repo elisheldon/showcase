@@ -26,7 +26,7 @@ const getUrlPreview = async url => {
 
   // if we get a title (indicating a working url) and no image, use default link image (commented out: try to get an image from thum.io)
   if(data.title && !data.image){
-    data.image = '/static/student/default_images/link.svg'
+    data.image = window.staticUrl + 'student/default_images/link.svg'
     //data.image = '//image.thum.io/get/width/300/crop/600/' + url
   }
 

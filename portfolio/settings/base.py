@@ -13,12 +13,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'django_cleanup.apps.CleanupConfig',
+    'storages',
     'student.apps.StudentConfig',
     'teacher.apps.TeacherConfig',
     'authentication.apps.AuthenticationConfig',
     'preview.apps.PreviewConfig',
-    'crispy_forms',
-    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,17 +84,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'preview/static/'),
-    os.path.join(BASE_DIR, 'student/static/'),
-    os.path.join(BASE_DIR, 'static/'),
-]
-
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
@@ -104,6 +94,10 @@ AUTH_USER_MODEL = 'authentication.PortfolioUser'
 
 LOGIN_URL = '/'
 
-MEDIA_URL = '/uploads/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'preview/static/'),
+    os.path.join(BASE_DIR, 'student/static/'),
+    os.path.join(BASE_DIR, 'static/'),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')

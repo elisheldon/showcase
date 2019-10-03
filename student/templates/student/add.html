@@ -13,7 +13,8 @@
   <script src='{% static "student/add.js" %}'></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'></style>
   <script>
-    window.previewUrl = '{% url "preview:index" %}';
+    window.previewUrl = '{% url "preview:index" %}'
+    window.staticUrl = '{% static '' %}'
   </script>
 {% endblock %}
 
