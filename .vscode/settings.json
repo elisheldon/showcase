@@ -1,5 +1,5 @@
 {
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "eb-virt\\Scripts\\python.exe"
+    "python.pythonPath": "C:\\Python36\\python.exe"
 }

@@ -2,9 +2,9 @@ from .base import *
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
-DEBUG = False
+DEBUG = os.environ['DJANGO_DEBUG']
 
-ALLOWED_HOSTS = ['127.0.0.1:8000', 'showcaseapp.azurewebsites.net', 'showcase-env.pb9jd7myyh.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['127.0.0.1:8000', 'showcase-env.pb9jd7myyh.us-west-2.elasticbeanstalk.com']
 
 DATABASES = {
     'default': {
