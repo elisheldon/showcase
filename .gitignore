@@ -126,3 +126,9 @@ dmypy.json
 
 # blacklist (only needs a single import)
 blacklist.txt
+
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
