@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 
-<div class='card text-center border-primary' id='card-{{ item.id }}'>
+<div class='card text-center mx-auto border-primary' id='card-{{ item.id }}'>
   <div style='position: relative'>
     {% if item.sub_item_type|stringformat:"s" == "link" %}
       <img src='{{ item.sub_item.image }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>

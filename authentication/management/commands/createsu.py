@@ -9,4 +9,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not get_user_model().objects.filter(username='admin').exists():
-            get_user_model().objects.create_superuser('admin', 'eli.sheldon@gmail.com', os.environ['DJANGO_SUPERUSER_PASS'])
+            get_user_model().objects.create_superuser('admin', 'kombucha@gmail.com', os.environ['DJANGO_SUPERUSER_PASS'])

@@ -15,7 +15,7 @@ from student.views import student_check
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:
-        if student_check(request):
+        if request.user.groups.filter(name='students').exists():
             return HttpResponseRedirect(reverse('student:portfolio'))
     form = LoginForm()
     return render(request, 'authentication/index.html', {'form': form})

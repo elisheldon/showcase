@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.staticfiles import finders
 from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
+import urllib
 import requests
 from webpreview import web_preview
 from json import loads
@@ -16,9 +18,11 @@ def index(request):
         # get final url of any link shorteners, per https://alexwlchan.net/2016/07/chasing-redirects-and-url-shorteners/
         url = requests.get(url_in).url
         url_obj = tldextract.extract(url)
-        banned = BlacklistUrl.objects.filter(domain=f'{url_obj.domain}.{url_obj.suffix}\n') #\n because that's how i loaded them into the database - remove it after next blacklist load
+        print(url_obj.domain)
+        print(url_obj.suffix)
+        banned = BlacklistUrl.objects.filter(domain=f'{url_obj.domain}.{url_obj.suffix}')
         if banned:
-            return JsonResponse({'title': 'This URL has been blocked', 'description': 'Make sure you are only adding school-approriate content to your portfolio - this should be your best work!', 'image': ''})
+            return JsonResponse({'title': 'This URL has been blocked', 'description': 'Make sure you are only adding school-approriate content to your portfolio - this should be your best work!', 'image': '', 'url': ''})
         title, description, image = web_preview(url, parser='html.parser', headers = {'User-Agent': 'Mozilla/5.0'})
         return JsonResponse({'title': title, 'description': description, 'image': image, 'url': url})
     except:
@@ -26,10 +30,9 @@ def index(request):
 
 @staff_member_required
 def load_blacklist(request):
-    url = finders.find('preview/blacklist.txt') # static from django.templatetags.static wasn't working
-    with open(url) as blacklist:
-        for line in blacklist:
-            domain = BlacklistUrl(domain = line.rstrip())
-            domain.save() # this should be transactional (ie, not saving every time) if i do it again / before production;
-            # PostgreSQL supports autokey primary key unlike sqlite3 per https://docs.djangoproject.com/en/2.2/ref/models/querysets/#bulk-create
+    #url = settings.STATIC_URL + 'preview/blacklist.txt'
+    url = 'https://elasticbeanstalk-us-west-2-315679056419.s3-us-west-2.amazonaws.com/static/preview/blacklist.txt'
+    with urllib.request.urlopen(url) as blacklist:
+        domains = [BlacklistUrl(domain = line.rstrip().decode('UTF-8')) for line in blacklist]
+        BlacklistUrl.objects.bulk_create(domains, 1000)
     return HttpResponse('Successfully loaded blacklist.')
