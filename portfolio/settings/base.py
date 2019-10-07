@@ -46,6 +46,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -94,6 +96,9 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AUTH_USER_MODEL = 'authentication.PortfolioUser'
 
 LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = 'logoutUser'
+LOGOUT_REDIRECT_URL = '/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'preview/static/'),
@@ -107,3 +112,6 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+SOCIAL_AUTH_GOOGLE_KEY = '649627438525-pfmf65to8338qmvaeo4gre3mhasgf5at.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_SECRET = os.environ['GOOGLE_SECRET']

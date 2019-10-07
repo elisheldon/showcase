@@ -3,6 +3,11 @@
   .card-columns {
     column-count: 1;
   }
+  h2, h3 {
+    display: block !important;
+    text-align: center !important;
+    float: none !important;
+  }
 }
 
 /* Small devices (landscape phones, 576px and up) */

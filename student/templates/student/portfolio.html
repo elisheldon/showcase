@@ -18,9 +18,15 @@
 {% block title %}{% trans 'My Showcase' %}{% endblock %}
 
 {% block body %}
-  <h2>{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}</h2>
+  <div style='width: 100%'>
+    <h2 style='display: inline;'>{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}</h2>
+    <h3 style='float: right; position: relative'>
+      <i class='fas fa-plus-circle text-primary'></i>&nbsp;{%trans 'Add&nbsp;item' %}
+      <a href='{% url "student:add" %}' class='stretched-link'></a>
+    </h3>
+  </div> 
   <br>
-  <div class='card-columns'>
+  <div class='card-columns' style='width: 100%'>
   {% for item in items|dictsortreversed:'date_time_added' %}
     {% include 'student/card.html' %}   
   {% endfor %}
