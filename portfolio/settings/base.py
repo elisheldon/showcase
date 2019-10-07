@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'teacher.apps.TeacherConfig',
     'authentication.apps.AuthenticationConfig',
     'preview.apps.PreviewConfig',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -101,3 +102,8 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)

@@ -78,3 +78,6 @@ def register(request):
     else:
         form = RegistrationForm()
     return render(request, 'authentication/register.html', {'form': form})
+
+def privacy(request):
+    return render(request, 'authentication/privacy.html')
