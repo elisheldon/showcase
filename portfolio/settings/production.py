@@ -30,3 +30,10 @@ STATICFILES_STORAGE = 'portfolio.storage_backends.StaticStorage'
 MEDIA_LOCATION = 'uploads'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 DEFAULT_FILE_STORAGE = 'portfolio.storage_backends.PublicMediaStorage'
+
+EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ['SES_USERNAME']
+EMAIL_HOST_PASSWORD = os.environ['SES_PASSWORD']
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Showcase <noreply@showcaseedu.com>'

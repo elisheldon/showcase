@@ -31,4 +31,7 @@
     {% include 'student/card.html' %}   
   {% endfor %}
   </div>
+  {% if items|length_is:'0' %}
+    <h4 class='text-center'>Welcome to Showcase! Add something to your portfolio by <a href='{% url "student:add" %}'>clicking here</a>.</h4>
+  {% endif %}
 {% endblock %}

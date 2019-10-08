@@ -25,12 +25,18 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class='navbar-nav'>
         {% block navlinks %}{% endblock %}
-        {% if request.user.is_authenticated %}
-          <a class='nav-item nav-link' href='{% url "authentication:logoutUser" %}'>Log out</a>
-        {% endif %}
       </div>
       <div class='ml-auto navbar-nav'>
-        <span class='nav-item nav-link nav-username text-white'>{{ request.user.first_name }}</span>
+        {% if request.user.is_authenticated %}
+          <div class='nav-item dropdown'>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class='nav-username text-white'>{{ request.user.first_name }}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href='{% url "authentication:logoutUser" %}''>Log out</a>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </nav>
