@@ -9,13 +9,19 @@
 }
 
 .headerTitle{
-  font-weight: 700;
   font-size: 4em;
-  color: #333;
+  color: #fff;
 }
 
 .headerSubtitle{
-  font-weight: 700;
   font-size: 2em;
-  color: #333;
+  color: #fff;
+}
+
+button{
+  margin: 10px;
+}
+
+#div_id_register-terms{
+  font-size: .8em;
 }

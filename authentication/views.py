@@ -60,16 +60,14 @@ def register(request):
             password2 = form.cleaned_data.get('password2')
             user_type = form.cleaned_data.get('user_type')
             first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-
+            age = form.cleaned_data.get('age')
             user = get_user_model().objects.create_user(username, email, password1)
             user.first_name = first_name
-            user.last_name = last_name
             if user_type == 'student':
                 group = Group.objects.get(name='students')
                 user.groups.add(group)
                 user.save()
-                student = Student.objects.create(user = user)
+                student = Student.objects.create(user = user, age = age)
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
             elif userType == 'teacher':
@@ -86,3 +84,6 @@ def register(request):
 
 def privacy(request):
     return render(request, 'authentication/privacy.html')
+
+def terms(request):
+    return render(request, 'authentication/terms.html')

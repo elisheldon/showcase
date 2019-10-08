@@ -17,6 +17,9 @@ class Student(models.Model):
         blank = True,
         related_name = 'students'
     )
+    age = models.SmallIntegerField(
+        default = 0,
+    )
     def __str__(self):
         return self.user.username
 
