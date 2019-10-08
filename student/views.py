@@ -67,7 +67,10 @@ def add(request):
             return render(request, 'student/add.html', {'form': form})
     else:
         form = AddForm()
-    return render(request, 'student/add.html', {'form': form})
+        student = Student.objects.get(user = request.user)
+        if student.age < 13:
+            messages.add_message(request, messages.INFO, _('Stay safe! Remember not to include any personal information when adding an item to your Showcase.'))
+        return render(request, 'student/add.html', {'form': form})
 
 def remove(request):
     if not student_check(request):

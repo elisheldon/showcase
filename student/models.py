@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from uuid import uuid4
+import os
 
 from teacher.models import Classroom
 
@@ -78,9 +79,12 @@ class Gallery(models.Model):
         null = True,
     )
 
+def get_upload_path(instance, filename):
+    return os.path.join('images', uuid4().hex, filename)
+
 class Photo(models.Model):
     image = models.ImageField(
-        upload_to='images/'+uuid4().hex+'/'
+        upload_to=get_upload_path
     )
     parent_gallery = models.ForeignKey(
         Gallery,
