@@ -70,7 +70,7 @@ def register(request):
                 student = Student.objects.create(user = user, age = age)
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
-            elif userType == 'teacher':
+            elif user_type == 'teacher':
                 group = Group.objects.get(name='teachers')
                 user.groups.add(group)
                 user.save()
