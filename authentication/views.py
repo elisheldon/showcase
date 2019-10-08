@@ -17,17 +17,22 @@ def index(request):
     if request.user.is_authenticated:
         if request.user.groups.filter(name='students').exists():
             return HttpResponseRedirect(reverse('student:portfolio'))
-    form = LoginForm()
-    return render(request, 'authentication/index.html', {'form': form})
+    loginForm = LoginForm(prefix='login')
+    registerForm = RegistrationForm(prefix='register')
+    context = {
+        'loginForm': loginForm,
+        'registerForm': registerForm,
+    }
+    return render(request, 'authentication/index.html', context)
 
 def loginUser(request):
-    form = LoginForm(request.POST)
+    form = LoginForm(request.POST, prefix='login')
     if form.is_valid():
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             if request.user.groups.filter(name='students').exists():
                 return HttpResponseRedirect(reverse('student:portfolio'))
             elif request.user.groups.filter(name='teachers').exists():
@@ -47,7 +52,7 @@ def logoutUser(request):
 
 def register(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST, prefix='register')
         if form.is_valid():
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
@@ -65,7 +70,7 @@ def register(request):
                 user.groups.add(group)
                 user.save()
                 student = Student.objects.create(user = user)
-                login(request, user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
             elif userType == 'teacher':
                 group = Group.objects.get(name='teachers')
@@ -73,10 +78,10 @@ def register(request):
                 user.save()
                 teacher = Teacher(user = user)
                 teacher.save()
-                login(request, user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('teacher:index'))
     else:
-        form = RegistrationForm()
+        form = RegistrationForm(prefix='register')
     return render(request, 'authentication/register.html', {'form': form})
 
 def privacy(request):

@@ -1,0 +1,21 @@
+.masthead{
+  min-height: 30rem;
+  position: relative;
+  width: 100%;
+  height: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.headerTitle{
+  font-weight: 700;
+  font-size: 4em;
+  color: #333;
+}
+
+.headerSubtitle{
+  font-weight: 700;
+  font-size: 2em;
+  color: #333;
+}

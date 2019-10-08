@@ -127,6 +127,8 @@ dmypy.json
 # blacklist (only needs a single import)
 blacklist.txt
 
+# Photoshop (don't need in S3)
+*.psd
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

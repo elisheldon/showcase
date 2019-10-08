@@ -2,18 +2,82 @@
 
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load static %}
+
+{% block scripts %}
+  {{ block.super }}
+  <link rel='stylesheet' type='text/css' href='{% static "authentication/index.css" %}'>
+{% endblock %}
 
 {% block title %}{% trans 'Log in' %}{% endblock %}
 
+{% block header %}
+  <header class='masthead d-flex' style='background-image: url({% static "landing.jpg" %})'>
+    <div class='container text-center my-auto'>
+      <h1 class='headerTitle'>Showcase</h1>
+      <h2 class='headerSubtitle'>{% trans 'A student-owned digital portfolio' %}</h2>
+      <br>
+      <button type="button" class="btn btn-primary btn-lg" data-tab="loginTab">Log in</button>
+      <button type="button" class="btn btn-primary btn-lg" data-tab="registerTab">Register</button>
+    </div>
+  </header>
+{% endblock %}
+
 {% block body %}
-<h2>{% trans 'Log in' %}</h2>
-<form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off'>
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button type='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
-</form>
-<!--<br><a href='{% url "social:begin" "google-oauth2" %}' class='btn btn-primary'>{% trans 'Login with Google' %}</a>-->
-<br>
-<p>Forgot your password? <a href='{% url "authentication:password_reset" %}'>{% trans 'Click here to reset it.' %}</a></p>
-<p>New to Showcase? <a href='{% url "authentication:register" %}'>{% trans 'Click here to create an account.' %}</a><p></p>
+  <div class="modal" id="loginRegisterModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div role="tabpanel">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs nav-fill" role="tablist">
+              <li role="presentation" class="nav-item"><a class='nav-link active' href="#loginTab" aria-controls="loginTab" role="tab" data-toggle="tab"><h3>{% trans 'Log in' %}</h3></a></li>
+              <li role="presentation" class="nav-item"><a class='nav-link' href="#registerTab" aria-controls="registerTab" role="tab" data-toggle="tab"><h3>{% trans 'Register' %}</h3></a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="loginTab">
+                <form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off'>
+                  {% csrf_token %}
+                  {{ loginForm|crispy }}
+                  <div class='text-center'>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+                    <button type='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
+                  </div>
+                </form>
+                <!--<br><a href='{% url "social:begin" "google-oauth2" %}' class='btn btn-primary'>{% trans 'Login with Google' %}</a>-->
+                <br>
+                <p>Forgot your password? <a href='{% url "authentication:password_reset" %}'>{% trans 'Click here to reset it.' %}</a></p>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="registerTab">
+                <form action='{% url "authentication:register" %}' method='post' autocomplete='off'>
+                  {% csrf_token %}
+                  {{ registerForm|crispy }}
+                  <div class='text-center'>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Cancel' %}</button>
+                    <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% blocktrans %}
+    <h3>Showcase is a lightweight, student-driven portfolio that represents only the work students are proud to share.</h3>
+    <p>Showcase is not a place for teachers to assign a grade, nor decide what is included. Students have complete control over their Showcase portfolio, and never need to include language justifying a low grade or how they plan on improving. With this control, students can share their portfolios at family conferences, with potential employers or even when applying to college.</p>
+    <p>Students can upload images of physical work and link to any publicly accessibly URL. Coming soon: Google Classroom integration!</p>
+  {% endblocktrans %}
+
+<script>
+  // https://stackoverflow.com/questions/47314096/how-to-open-a-particular-tab-inside-a-modal
+  $('button').on('click', function() {
+      var tabTarget = $(this).data('tab');
+      $('#loginRegisterModal').modal('show');
+      $('.nav-tabs a[href="#' + tabTarget + '"]').tab('show');
+  });
+</script>
+
 {% endblock %}
