@@ -1,5 +1,5 @@
 # Showcase
-A digital portfolio platform for students, currently in early development
+A digital portfolio platform for students, currently in development at https://showcaseedu.com
 
 Showcase is a lightweight, student-driven collection of work that represents only those assignments students are proud to share with family, friends and potential employers. In contrast to existing electronic portfolio products, Showcase is not a place for teachers to assign a grade, nor dictate what is included or excluded. Students have complete control over their Showcase portfolio, and never need to include language justifying a low grade or how they plan on improving.
 

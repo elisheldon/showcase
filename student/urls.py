@@ -8,5 +8,6 @@ urlpatterns = [
     path('add', views.add, name='add'),
     path('remove', views.remove, name='remove'),
     path('gallery/<int:item_id>', views.gallery, name='gallery'),
+    path('public', views.public, name='public'),
 ]
 

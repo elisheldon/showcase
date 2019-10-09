@@ -25,9 +25,11 @@ def portfolio(request):
         return HttpResponseRedirect(reverse('authentication:index'))
     student = Student.objects.get(user = request.user)
     items = Item.objects.filter(student = student)
+    public = student.pf_public
     context = {
         'items': items,
         'name': request.user.first_name,
+        'public': public
     }
     return render(request, 'student/portfolio.html', context)
 
@@ -100,4 +102,15 @@ def gallery(request, item_id):
     }
     return render(request, 'student/gallery.html', context)
 
-        
+def public(request):
+    if not student_check(request):
+        return HttpResponseRedirect(reverse('authentication:index'))
+    pf_public = loads(request.body)['public']
+    student = Student.objects.get(user = request.user)
+    try:
+        student.pf_public = pf_public
+        print(pf_public)
+        student.save()
+    except:
+        raise PermissionDenied
+    return HttpResponse(status=202)

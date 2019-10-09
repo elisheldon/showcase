@@ -21,6 +21,9 @@ class Student(models.Model):
     age = models.SmallIntegerField(
         default = 0,
     )
+    pf_public = models.BooleanField(
+        default = False,
+    )
     def __str__(self):
         return self.user.username
 

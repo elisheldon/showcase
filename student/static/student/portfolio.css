@@ -3,7 +3,7 @@
   .card-columns {
     column-count: 1;
   }
-  h2, h3 {
+  h2, #add {
     display: block !important;
     text-align: center !important;
     float: none !important;
@@ -36,4 +36,16 @@
   .card-columns {
     column-count: 5;
   }
+}
+
+#lock{
+  font-size: .4em;
+  vertical-align: .15em;
+  text-decoration: none !important;
+}
+
+#add{
+  float: right; 
+  position: relative;
+  transform: translateY(.3em)
 }

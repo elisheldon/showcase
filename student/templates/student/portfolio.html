@@ -8,10 +8,12 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/TypeWatch/3.0.1/jquery.typewatch.min.js'></script>
   <script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>
   <script src='{% static "student/card.js" %}'></script>
+  <script src='{% static "student/portfolio.js" %}'></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/portfolio.css" %}'>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'>
   <script>
       window.removeUrl = '{% url "student:remove" %}';
+      window.publicUrl = '{% url "student:public" %}';
   </script>
 {% endblock %}
 
@@ -19,11 +21,20 @@
 
 {% block body %}
   <div style='width: 100%'>
-    <h2 style='display: inline;'>{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}</h2>
-    <h3 style='float: right; position: relative'>
+    <h2 style='display: inline;'>
+      {% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}
+      <a href='#' id='lock' class='text-secondary' data-toggle='modal' data-target='#publicModal'>
+        {% if public %}
+          <i class='fas fa-lock-open'></i>
+        {% else %}
+          <i class='fas fa-lock'></i>
+        {% endif %}
+      </a>
+    </h2>
+    <h4 id='add'>
       <i class='fas fa-plus-circle text-primary'></i>&nbsp;{%trans 'Add&nbsp;item' %}
       <a href='{% url "student:add" %}' class='stretched-link'></a>
-    </h3>
+    </h4>
   </div> 
   <br>
   <div class='card-columns' style='width: 100%'>
@@ -34,4 +45,39 @@
   {% if items|length_is:'0' %}
     <h4 class='text-center'>Welcome to Showcase! Add something to your portfolio by <a href='{% url "student:add" %}'>clicking here</a>.</h4>
   {% endif %}
+
+  <!-- Public/private modal -->
+  <div class='modal fade' id='publicModal' tabindex='-1' role='dialog' aria-labelledby='publicModalLabel' aria-hidden='true'>
+    <div class='modal-dialog modal-dialog-centered' role='document'>
+      <div class='modal-content'>
+        <div class='modal-header'>
+          <h5 class='modal-title' id='publicModalLabel'>{% trans 'Showcase visibility' %}</h5>
+          <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span>
+          </button>
+        </div>
+        {% if public %}
+          <div class='modal-body'>
+            {% blocktrans %}
+              Your Showcase is set to <b>public</b>, and can be viewed by anyone who visits {{link}}. Do you want to change your Showcase to <b>private</b>?
+            {% endblocktrans %}
+          </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>{% trans 'No, keep it public' %}</button>
+            <button type='button' data-public='false' class='btn btn-primary' id='changePublicButton'>{% trans 'Yes, make it private' %}</button>
+          </div>
+        {% else %}
+          <div class='modal-body'>
+            {% blocktrans %}
+              Your Showcase is set to <b>private</b>. Do you want to change your Showcase to <b>public</b>? This will allow anyone to see your Showcase at {{link}}.
+            {% endblocktrans %}
+          </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>{% trans 'No, keep it private' %}</button>
+            <button type='button' data-public='true' class='btn btn-primary' id='changePublicButton'>{% trans 'Yes, make it public' %}</button>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 {% endblock %}
