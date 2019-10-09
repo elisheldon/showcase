@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -50,6 +50,9 @@ def add(request):
                 item = Item.objects.create(student = student, sub_item = link, title = title, description = description)
             if sub_item_type == 'gallery':
                 for file in request.FILES.getlist('photos'):
+                    if file.size > 1024*1024*5:
+                        messages.add_message(request, messages.ERROR, _('One of the photos you chose is too large. Please try again, making sure each photo is less than 5MB.'))
+                        return render(request, 'student/add.html', {'form': form})
                     try:
                         im = Image.open(file)
                         im.verify()
@@ -114,3 +117,19 @@ def public(request):
     except:
         raise PermissionDenied
     return HttpResponse(status=202)
+
+def view(request, username):
+    try:
+        student = Student.objects.get(user__username = username)
+        if not student.pf_public:
+            raise ValueError('private')
+    except:
+        messages.add_message(request, messages.ERROR, _('That student does not exist or has set their Showcase to be private.'))
+        return HttpResponseRedirect(reverse('authentication:index'))
+    items = Item.objects.filter(student = student)
+    context = {
+        'items': items,
+        'name': student.user.first_name,
+    }
+    return render(request, 'student/view.html', context)
+

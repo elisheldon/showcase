@@ -2,8 +2,12 @@ from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from uuid import uuid4
 import os
+from io import BytesIO
+from PIL import Image
+from safe_filefield.models import SafeFileField
 
 from teacher.models import Classroom
 
@@ -59,7 +63,8 @@ class Link(models.Model):
     )
     image = models.CharField(
         max_length = 512,
-        default = settings.STATIC_URL + 'student/default_images/link.svg',
+        blank = True,
+        null = True,
     )
     item = GenericRelation(
         Item,
@@ -95,3 +100,23 @@ class Photo(models.Model):
         related_name = 'photos'
     )
 
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=60, optimize=True)
+            output.seek(0)
+            self.image= InMemoryUploadedFile(output,'ImageField', "%s.jpg" %self.image.name.split('.')[0], 'image/jpeg', output.getbuffer().nbytes, None)
+        super(Photo, self).save(*args, **kwargs)
+
+class Document(models.Model):
+    file = SafeFileField(
+        allowed_extensions=('doc','docx','htm','html','odt','pdf','xls','xlsx','ods','ppt','pptx','txt','pages','numbers','key')
+    )
+    item = GenericRelation(
+        Item,
+        content_type_field='sub_item_type',
+        object_id_field='sub_item_id',
+    )

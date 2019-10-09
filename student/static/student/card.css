@@ -18,7 +18,13 @@
   padding-top: 0;
 }
 
-.removeLink {
+.removeLink{
   text-decoration: none !important;
   float: right;
+}
+
+.item-icon{
+  font-size: 3em;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }

@@ -39,7 +39,7 @@
   <br>
   <div class='card-columns' style='width: 100%'>
   {% for item in items|dictsortreversed:'date_time_added' %}
-    {% include 'student/card.html' %}   
+    {% include 'student/card.html' with view=False %}   
   {% endfor %}
   </div>
   {% if items|length_is:'0' %}

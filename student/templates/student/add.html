@@ -21,10 +21,16 @@
 {% block title %}{% trans 'Add an Item' %}{% endblock %}
 
 {% block body %}
-  <h2>{% trans 'Add an Item' %}</h2>
   {% for error in form.errors.photos %}
     <div class='alert alert-danger' role='alert'>{{ error }}</div>
   {% endfor %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" id='photoSizeAlert'>
+    {% trans 'One of the photos you chose is too large. Please try again, making sure each photo is less than 5MB.' %}
+    <button type="button" class="close" id='hidePhotoSizeAlert' aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <h2>{% trans 'Add an Item' %}</h2>
   <div class='row'>
     <div class='col-lg-6 col-sm-12'>
       <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off' enctype='multipart/form-data'>
@@ -43,7 +49,12 @@
   {% verbatim %}
     <script id='hb_card' type="text/x-handlebars-template">
       <div class='card text-center'>
-        {{#if image }} <img src='{{ image }}' class='card-img-top' alt='Picture of {{ title }}'>{{/if }}
+        {{#if image }}
+          <img src='{{ image }}' class='card-img-top' alt='Picture of {{ title }}'>
+        {{else}}
+          {{#if linkType}}<i class="fas fa-link item-icon"></i>{{/if}}
+          {{#if fileType}}<i class="fas fa-file-alt item-icon"></i>{{/if}}
+        {{/if }}
         <div class='card-body text-left'>
           <h5 id='card_title' class='card-title'>{{ title }}</h5>
           <p id='card_description' class='card-text'>{{ description }}</p>

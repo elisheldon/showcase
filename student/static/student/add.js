@@ -1,9 +1,11 @@
 let titleManuallyChanged = false
 let descriptionManuallyChanged = false
+const maxPhotoSize = 100 //MB
 
 document.addEventListener('DOMContentLoaded', () => {
   // hide form elements not related to first item type immediately
   renderSubItemOptions(0)
+  $('#photoSizeAlert').hide()
 
   // add event to hide form elements not related to selected item type over 300ms
   document.getElementById('id_sub_item_type').addEventListener('change', () => {
@@ -40,6 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // add event to clear form when user clicks clear button
   document.getElementById('clear_form_btn').addEventListener('click', clearForm)
+
+  // add event to hide photoSizeAlert when user closes it
+  $('#photoSizeAlert').click(() => $('#photoSizeAlert').fadeOut(250))
 })
 
 // submit url to server to pull title, description and image link into form via /preview routes
@@ -62,6 +67,7 @@ const loadUrlPreview = async () => {
       else{
         data.description = document.getElementById('id_description').value
       }
+      data.linkType = true
       prerenderCard(data)
     }
   }
@@ -83,6 +89,7 @@ const renderGalleryPreview = () => {
   if (input.files && input.files[0]) {
     data.image = URL.createObjectURL(input.files[0])
   }
+  data.galleryType = true
   prerenderCard(data)
 }
 
@@ -135,6 +142,15 @@ const checkSubmitReady = () => {
     case 'gallery':
       if(document.getElementById('id_photos').files.length == 0){
         ready = false
+      }
+      else{
+        files = document.getElementById('id_photos').files
+        for (let i = 0; i < files.length; i++){
+          if(files[i].size>1024*1024*maxPhotoSize){
+            $('#photoSizeAlert').show()
+            document.getElementById('id_photos').value = ''
+          }
+        }
       }
   }
   document.getElementById('submit_form_btn').disabled = !ready

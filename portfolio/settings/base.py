@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'preview.apps.PreviewConfig',
     'social_django',
+    'safe_filefield',
 ]
 
 MIDDLEWARE = [

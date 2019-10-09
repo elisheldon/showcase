@@ -18,8 +18,6 @@ def index(request):
         # get final url of any link shorteners, per https://alexwlchan.net/2016/07/chasing-redirects-and-url-shorteners/
         url = requests.get(url_in).url
         url_obj = tldextract.extract(url)
-        print(url_obj.domain)
-        print(url_obj.suffix)
         banned = BlacklistUrl.objects.filter(domain=f'{url_obj.domain}.{url_obj.suffix}')
         if banned:
             return JsonResponse({'title': 'This URL has been blocked', 'description': 'Make sure you are only adding school-approriate content to your portfolio - this should be your best work!', 'image': '', 'url': ''})

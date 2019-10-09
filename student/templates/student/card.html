@@ -4,7 +4,11 @@
 <div class='card text-center mx-auto border-primary' id='card-{{ item.id }}'>
   <div style='position: relative'>
     {% if item.sub_item_type|stringformat:"s" == "link" %}
-      <img src='{{ item.sub_item.image }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
+      {% if item.sub_item.image %}
+        <img src='{{ item.sub_item.image }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
+      {% else %}
+        <i class="fas fa-link item-icon"></i>
+      {% endif %}
     {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
       <img src='{{ item.sub_item.cover.image.url }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
     {% endif %}
@@ -22,9 +26,11 @@
 
   <div class='card-footer text-muted text-left'>
     {% trans 'Added on ' %}{{ item.date_time_added|date }}
-    <a href='#' class='removeLink' data-toggle='modal' data-target='#removeModal' data-item-title='{{ item.title }}' data-item-id='{{ item.id }}'>
-        <i class='fas fa-trash-alt text-primary'></i>
-    </a>
+    {% if not view %}
+      <a href='#' class='removeLink' data-toggle='modal' data-target='#removeModal' data-item-title='{{ item.title }}' data-item-id='{{ item.id }}'>
+          <i class='fas fa-trash-alt text-primary'></i>
+      </a>
+    {% endif %}
   </div>
 </div>
 
