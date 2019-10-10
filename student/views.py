@@ -9,6 +9,7 @@ from django.core.exceptions import PermissionDenied
 from json import loads
 from PIL import Image
 import pathlib
+import magic
 
 from student.models import Student, Item, Link, Gallery, Photo, Document
 from .forms import AddForm
@@ -71,6 +72,12 @@ def add(request):
                 file = request.FILES['file']
                 if file.size > 1024*1024*2:
                     messages.add_message(request, messages.ERROR, _('The file you chose is too large. Please try again, making sure your file is less than 2MB.'))
+                    form.data = form.data.copy()
+                    form.data['title'] = ''
+                    return render(request, 'student/add.html', {'form': form})
+                mime = magic.from_buffer(file.read(), mime=True)
+                if mime not in ['application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-powerpoint','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.oasis.opendocument.text','application/vnd.oasis.opendocument.presentation','application/vnd.oasis.opendocument.spreadsheet','application/pdf','text/plain','text/csv','text/html','application/x-iwork-keynote-sffkey','application/x-iwork-pages-sffpages','application/x-iwork-numbers-sffnumbers']:
+                    messages.add_message(request, messages.ERROR, _('The file type you chose is not currently allowed. Showcase accepts uploading documents, spreadsheets, presentations and PDFs. Please try again with another file type.'))
                     form.data = form.data.copy()
                     form.data['title'] = ''
                     return render(request, 'student/add.html', {'form': form})

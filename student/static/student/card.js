@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(response.status == 204){
         modal.modal('hide')
         $('#card-' + itemId).remove()
+        $('#removeButton').unbind() // unregister the click event so future deletions don't repeat old post requests
       }
     })
   })

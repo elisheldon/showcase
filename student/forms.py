@@ -22,6 +22,7 @@ class AddForm(forms.Form):
 
     #  file inputs
     file = forms.FileField(
+        required=False,
         widget=forms.FileInput(attrs={'accept':'.doc, .docx, .htm, .html, .odt, .pdf, .xls, .xlsx, .ods, .ppt, .pptx, .txt, .pages, .numbers, .key'})
     )
 

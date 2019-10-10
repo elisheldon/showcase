@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // add event to check photo uploads
   document.getElementById('id_photos').addEventListener('input', () => {
-    checkSubmitReady()
     renderGalleryPreview()
+    checkSubmitReady()
   })
 
   // add event to check photo uploads
@@ -98,6 +98,9 @@ const renderGalleryPreview = () => {
   if (input.files && input.files[0]) {
     data.image = URL.createObjectURL(input.files[0])
   }
+  if (input.files && input.files[0] && !titleManuallyChanged) {
+    document.getElementById('id_title').value = input.files[0].name.replace(/\.[^/.]+$/, "") // removes file extension from filename
+  }
   data.galleryType = true
   prerenderCard(data)
 }
@@ -173,9 +176,13 @@ const checkSubmitReady = () => {
           if(files[i].size>1024*1024*maxPhotoSize){
             $('#photoSizeAlert').show()
             document.getElementById('id_photos').value = ''
+            if(!titleManuallyChanged){
+              document.getElementById('id_title').value = ''
+            }
           }
         }
       }
+      break
     case 'document':
       if(document.getElementById('id_file').files.length == 0){
         ready = false
