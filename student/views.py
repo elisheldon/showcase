@@ -28,10 +28,12 @@ def portfolio(request):
     student = Student.objects.get(user = request.user)
     items = Item.objects.filter(student = student)
     public = student.pf_public
+    public_link = 'https://showcaseedu.com/student/view/' + request.user.username
     context = {
         'items': items,
         'name': request.user.first_name,
-        'public': public
+        'public': public,
+        'link': public_link,
     }
     return render(request, 'student/portfolio.html', context)
 
