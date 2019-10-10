@@ -7,7 +7,6 @@ from uuid import uuid4
 import os
 from io import BytesIO
 from PIL import Image
-from safe_filefield.models import SafeFileField
 
 from teacher.models import Classroom
 
@@ -87,12 +86,12 @@ class Gallery(models.Model):
         null = True,
     )
 
-def get_upload_path(instance, filename):
+def get_image_upload_path(instance, filename):
     return os.path.join('images', uuid4().hex, filename)
 
 class Photo(models.Model):
     image = models.ImageField(
-        upload_to=get_upload_path
+        upload_to=get_image_upload_path
     )
     parent_gallery = models.ForeignKey(
         Gallery,
@@ -111,12 +110,19 @@ class Photo(models.Model):
             self.image= InMemoryUploadedFile(output,'ImageField', "%s.jpg" %self.image.name.split('.')[0], 'image/jpeg', output.getbuffer().nbytes, None)
         super(Photo, self).save(*args, **kwargs)
 
+def get_file_upload_path(instance, filename):
+    return os.path.join('documents', uuid4().hex, filename)
+
 class Document(models.Model):
-    file = SafeFileField(
-        allowed_extensions=('doc','docx','htm','html','odt','pdf','xls','xlsx','ods','ppt','pptx','txt','pages','numbers','key')
+    file = models.FileField(
+        upload_to=get_file_upload_path,
     )
     item = GenericRelation(
         Item,
         content_type_field='sub_item_type',
         object_id_field='sub_item_id',
+    )
+    icon = models.CharField(
+        max_length = 32,
+        default = 'fas fa-file',
     )

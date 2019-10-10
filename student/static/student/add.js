@@ -1,11 +1,13 @@
 let titleManuallyChanged = false
 let descriptionManuallyChanged = false
-const maxPhotoSize = 100 //MB
+const maxPhotoSize = 5 //MB
+const maxFileSize = 2 //MB
 
 document.addEventListener('DOMContentLoaded', () => {
   // hide form elements not related to first item type immediately
   renderSubItemOptions(0)
   $('#photoSizeAlert').hide()
+  $('#fileSizeAlert').hide()
 
   // add event to hide form elements not related to selected item type over 300ms
   document.getElementById('id_sub_item_type').addEventListener('change', () => {
@@ -20,6 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('id_photos').addEventListener('input', () => {
     checkSubmitReady()
     renderGalleryPreview()
+  })
+
+  // add event to check photo uploads
+  document.getElementById('id_file').addEventListener('input', () => {
+    renderFilePreview()
+    checkSubmitReady()
   })
 
   // add event to update card preview's title text when user changes title in form
@@ -43,8 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // add event to clear form when user clicks clear button
   document.getElementById('clear_form_btn').addEventListener('click', clearForm)
 
-  // add event to hide photoSizeAlert when user closes it
-  $('#photoSizeAlert').click(() => $('#photoSizeAlert').fadeOut(250))
+  // add event to hide alerts when user closes then
+  $('#hidePhotoSizeAlert').click(() => $('#photoSizeAlert').fadeOut(250))
+  $('#hideFileSizeAlert').click(() => $('#fileSizeAlert').fadeOut(250))
 })
 
 // submit url to server to pull title, description and image link into form via /preview routes
@@ -93,6 +102,17 @@ const renderGalleryPreview = () => {
   prerenderCard(data)
 }
 
+const renderFilePreview = () => {
+  const data = {description: document.getElementById('id_description').value}
+  const input = document.getElementById('id_file')
+  if (input.files && input.files[0] && !titleManuallyChanged) {
+    document.getElementById('id_title').value = input.files[0].name.replace(/\.[^/.]+$/, "") // removes file extension from filename
+  }
+  data.title = document.getElementById('id_title').value
+  data.fileType = true
+  prerenderCard(data)
+}
+
 const prerenderCard = data => {
   const today = new Date // to render footer on preview card
   data.date = today.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
@@ -113,14 +133,18 @@ const renderSubItemOptions = duration => {
   const sub_item_type = document.getElementById('id_sub_item_type').value
   switch(sub_item_type){
     case 'link':
-      
-      $('#div_id_photos').fadeOut(duration, function(){
+      $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })
       break
     case 'gallery':
-      $('#div_id_url').fadeOut(duration, function(){
+      $('#div_id_url, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_photos').fadeIn(duration)
+      })
+      break
+    case 'document':
+      $('#div_id_url, #div_id_photos').fadeOut(duration).promise().done(function(){
+        $('#div_id_file').fadeIn(duration)
       })
       break
   }
@@ -152,6 +176,21 @@ const checkSubmitReady = () => {
           }
         }
       }
+    case 'document':
+      if(document.getElementById('id_file').files.length == 0){
+        ready = false
+      }
+      else{
+        file = document.getElementById('id_file').files[0]
+        if(file.size>1024*1024*maxFileSize){
+          $('#fileSizeAlert').show()
+          document.getElementById('id_file').value = ''
+          if(!titleManuallyChanged){
+            document.getElementById('id_title').value = ''
+          }
+        }
+      }
+      break
   }
   document.getElementById('submit_form_btn').disabled = !ready
 }

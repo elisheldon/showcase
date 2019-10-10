@@ -10,7 +10,7 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 class AddForm(forms.Form):
-    sub_item_type_choices = (('link', _('Link')),('gallery', _('Photos')))
+    sub_item_type_choices = (('link', _('Link')),('gallery', _('Photos')),('document', _('Document upload')))
     sub_item_type = forms.ChoiceField(label = _('Type'), choices = sub_item_type_choices)
 
     # link inputs
@@ -19,6 +19,11 @@ class AddForm(forms.Form):
 
     # gallery inputs
     photos = forms.ImageField(label = _('Photos* (max size 5MB each)'), widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
+
+    #  file inputs
+    file = forms.FileField(
+        widget=forms.FileInput(attrs={'accept':'.doc, .docx, .htm, .html, .odt, .pdf, .xls, .xlsx, .ods, .ppt, .pptx, .txt, .pages, .numbers, .key'})
+    )
 
     title = forms.CharField(label = _('Title'), max_length=128)
     description = forms.CharField(label = _('Description'), widget=forms.Textarea(attrs={'rows':3}), required=False, max_length=256)

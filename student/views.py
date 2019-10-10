@@ -8,8 +8,9 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from json import loads
 from PIL import Image
+import pathlib
 
-from student.models import Student, Item, Link, Gallery, Photo
+from student.models import Student, Item, Link, Gallery, Photo, Document
 from .forms import AddForm
 
 def student_check(request):
@@ -66,6 +67,31 @@ def add(request):
                         gallery.cover = photo
                         gallery.save()
                 item = Item.objects.create(student = student, sub_item = gallery, title = title, description = description)
+            if sub_item_type == 'document':
+                file = request.FILES['file']
+                if file.size > 1024*1024*2:
+                    messages.add_message(request, messages.ERROR, _('The file you chose is too large. Please try again, making sure your file is less than 2MB.'))
+                    form.data = form.data.copy()
+                    form.data['title'] = ''
+                    return render(request, 'student/add.html', {'form': form})
+                extension = pathlib.Path(file.name).suffix
+                if extension[1:] in ['doc','docx','odt','txt','pages']:
+                    icon = 'fas fa-file-alt'
+                elif extension[1:] in ['xls','xlsx','ods','numbers']:
+                    icon = 'fas fa-file-excel'
+                elif extension[1:] in ['ppt','pptx','key']:
+                    icon = 'fas fa-file-powerpoint'
+                elif extension[1:] == 'pdf':
+                    icon = 'fas fa-file-pdf'
+                elif extension[1:] in ['html','htm']:
+                    icon = 'fas fa-file-code'
+                else:
+                    messages.add_message(request, messages.ERROR, _('The file type you chose is not currently allowed. Showcase accepts uploading documents, spreadsheets, presentations and PDFs. Please try again with another file type.'))
+                    form.data = form.data.copy()
+                    form.data['title'] = ''
+                    return render(request, 'student/add.html', {'form': form})
+                document = Document.objects.create(file = file, icon = icon)
+                item = Item.objects.create(student = student, sub_item = document, title = title, description = description)
             messages.add_message(request, messages.SUCCESS, _('Successfully added %(title)s to your portfolio.') % {'title': title})
             return HttpResponseRedirect(reverse('student:add'))
         else:

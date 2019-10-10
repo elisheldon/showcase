@@ -7,10 +7,12 @@
       {% if item.sub_item.image %}
         <img src='{{ item.sub_item.image }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
       {% else %}
-        <i class="fas fa-link item-icon"></i>
+        <i class='fas fa-link item-icon'></i>
       {% endif %}
     {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
       <img src='{{ item.sub_item.cover.image.url }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
+    {% elif item.sub_item_type|stringformat:"s" == "document" %}
+      <i class='{{ item.sub_item.icon }} item-icon'></i>
     {% endif %}
     <div class='card-body text-left'>
       <h5 id='card_title' class='card-title'>{{ item.title }}</h5>
@@ -21,6 +23,8 @@
       <a href='{{ item.sub_item.url }}' target='_blank' class='stretched-link'></a>
     {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
       <a href='{% url "student:gallery" item.id %}' class='stretched-link'></a>
+    {% elif item.sub_item_type|stringformat:"s" == "document" %}
+      <a href='{{ item.sub_item.file.url }}' target='_blank' class='stretched-link'></a>
     {% endif %}
   </div>
 
