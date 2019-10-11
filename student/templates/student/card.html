@@ -5,7 +5,7 @@
   <div style='position: relative'>
     {% if item.sub_item_type|stringformat:"s" == "link" %}
       {% if item.sub_item.image %}
-        <img src='{{ item.sub_item.image }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
+        <img src='{{ item.sub_item.image }}' class='card-img-top' onerror='linkImgError(this)' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
       {% else %}
         <i class='fas fa-link item-icon'></i>
       {% endif %}

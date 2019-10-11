@@ -6,6 +6,12 @@ const renderCard = (context) => {
   return html
 }
 
+// swaps broken link image for link icon
+const linkImgError = (image) => {
+  image.outerHTML = "<i class='fas fa-link item-icon'></i>"
+  return true
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const csrftoken = Cookies.get('csrftoken')
   // https://getbootstrap.com/docs/4.3/components/modal/

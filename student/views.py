@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import gettext as _
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.contrib.contenttypes.models import ContentType
 from json import loads
 from PIL import Image
 import pathlib
@@ -48,11 +49,21 @@ def add(request):
             description = form.cleaned_data.get('description')
             sub_item_type = form.cleaned_data.get('sub_item_type')
             if sub_item_type == 'link':
+                linkType = ContentType.objects.get_for_model(Link)
+                linkCount = Item.objects.filter(student = student, sub_item_type = linkType).count()
+                if linkCount >= 100:
+                    messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 100 links per account. Please remove one or more links from your Showcase, then try again.'))
+                    return render(request, 'student/add.html', {'form': form})
                 url = form.cleaned_data.get('url')
                 image = form.cleaned_data.get('image')
                 link = Link.objects.create(url = url, image = image)
                 item = Item.objects.create(student = student, sub_item = link, title = title, description = description)
             if sub_item_type == 'gallery':
+                galleryType = ContentType.objects.get_for_model(Gallery)
+                galleryCount = Item.objects.filter(student = student, sub_item_type = galleryType).count()
+                if galleryCount >= 20:
+                    messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 20 galleries per account. Please remove one or more galleries from your Showcase, then try again.'))
+                    return render(request, 'student/add.html', {'form': form})
                 for file in request.FILES.getlist('photos'):
                     if file.size > 1024*1024*5:
                         messages.add_message(request, messages.ERROR, _('One of the photos you chose is too large. Please try again, making sure each photo is less than 5MB.'))
@@ -71,6 +82,11 @@ def add(request):
                         gallery.save()
                 item = Item.objects.create(student = student, sub_item = gallery, title = title, description = description)
             if sub_item_type == 'document':
+                documentType = ContentType.objects.get_for_model(Document)
+                documentCount = Item.objects.filter(student = student, sub_item_type = documentType).count()
+                if documentCount >= 20:
+                    messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 20 documents per account. Please remove one or more documents from your Showcase, then try again.'))
+                    return render(request, 'student/add.html', {'form': form})
                 file = request.FILES['file']
                 if file.size > 1024*1024*2:
                     messages.add_message(request, messages.ERROR, _('The file you chose is too large. Please try again, making sure your file is less than 2MB.'))

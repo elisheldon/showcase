@@ -56,7 +56,7 @@
     <script id='hb_card' type="text/x-handlebars-template">
       <div class='card text-center'>
         {{#if image }}
-          <img src='{{ image }}' class='card-img-top' alt='Picture of {{ title }}'>
+          <img src='{{ image }}' class='card-img-top' onerror='linkImgError(this)' alt='Picture of {{ title }}'>
         {{else}}
           {{#if linkType}}<i class="fas fa-link item-icon"></i>{{/if}}
           {{#if fileType}}<i class="fas fa-file item-icon"></i>{{/if}}
