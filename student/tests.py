@@ -48,8 +48,6 @@ class ModelsTestCase(TestCase):
         Item.objects.create(student = student, sub_item = link, title = 'test title', description = 'test description')
         link = Link.objects.get(url = 'http://test.com')
         self.assertTrue(link)
-        link = Link.objects.get(image = settings.STATIC_URL + 'student/default_images/link.svg')
-        self.assertTrue(link)
         item = Item.objects.get(student = student)
         self.assertTrue(item)
     
