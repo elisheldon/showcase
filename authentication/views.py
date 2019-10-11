@@ -6,10 +6,11 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext as _
+from hashlib import sha1
 
 from teacher.models import Teacher
 from student.models import Student
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, SocialForm
 from student.views import student_check
 
 # Create your views here.
@@ -17,6 +18,8 @@ def index(request):
     if request.user.is_authenticated:
         if request.user.groups.filter(name='students').exists():
             return HttpResponseRedirect(reverse('student:portfolio'))
+        else:
+            return HttpResponseRedirect(reverse('authentication:social'))
     loginForm = LoginForm(prefix='login')
     registerForm = RegistrationForm(prefix='register')
     context = {
@@ -87,3 +90,35 @@ def privacy(request):
 
 def terms(request):
     return render(request, 'authentication/terms.html')
+
+def social(request):
+    if request.method == 'POST':
+        form = SocialForm(request.POST)
+        if form.is_valid():
+            user_type = form.cleaned_data.get('user_type')
+            age = form.cleaned_data.get('age')
+            user = request.user
+            if user_type == 'student':
+                group = Group.objects.get(name='students')
+                user.groups.add(group)
+                if age < 13:
+                    user.email = sha1(user.email.encode()).hexdigest()
+                    user.last_name = None
+                user.save()
+                student = Student.objects.create(user = user, age = age)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return HttpResponseRedirect(reverse('student:portfolio'))
+            elif user_type == 'teacher':
+                group = Group.objects.get(name='teachers')
+                user.groups.add(group)
+                if age < 13:
+                    user.email = sha1(user.email.encode()).hexdigest()
+                    user.last_name = None
+                user.save()
+                teacher = Teacher(user = user)
+                teacher.save()
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return HttpResponseRedirect(reverse('teacher:index'))
+    else:
+        form = SocialForm()
+    return render(request, 'authentication/social.html', {'form': form})

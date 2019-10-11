@@ -3,7 +3,6 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
-
 from hashlib import sha1
 
 class LoginForm(forms.Form):
@@ -70,3 +69,9 @@ class PasswordResetFormCoppa(PasswordResetForm):
             })
             active_users = adult_users | child_users
             return (u for u in active_users if u.has_usable_password())
+
+class SocialForm(forms.Form):
+    user_type_choices = (('student',_('Student')),('teacher',_('Teacher')))
+    user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
+    age = forms.IntegerField(label = _('Age'), min_value=1, max_value=100)
+    terms = forms.BooleanField(label = _('I agree to the <a href="https://showcaseedu.com/terms">Terms of Service</a> and <a href="https://showcaseedu.com/privacy">Privacy Policy</a>. If I am under 13 years of age, I confirm that I have my parent or legal guardian\'s permission to use Showcase.'))

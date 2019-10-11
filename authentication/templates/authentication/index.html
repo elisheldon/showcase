@@ -37,6 +37,12 @@
             <!-- Tab panes -->
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="loginTab">
+                <br>
+                <div class='text-center' style='width:100%'>
+                  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='width: 50%; height: auto;'></a>
+                  <br><br>
+                  <h3>or</h3>
+                </div>
                 <form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off'>
                   {% csrf_token %}
                   {{ loginForm|crispy }}
@@ -45,11 +51,16 @@
                     <button type='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
                   </div>
                 </form>
-                <!--<br><a href='{% url "social:begin" "google-oauth2" %}' class='btn btn-primary'>{% trans 'Login with Google' %}</a>-->
                 <br>
                 <p>Forgot your password? <a href='{% url "authentication:password_reset" %}'>{% trans 'Click here to reset it.' %}</a></p>
               </div>
               <div role="tabpanel" class="tab-pane" id="registerTab">
+                <br>
+                <div class='text-center' style='width:100%'>
+                  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='width: 50%; height: auto;'></a>
+                  <br><br>
+                  <h3>or</h3>
+                </div>
                 <form action='{% url "authentication:register" %}' method='post' autocomplete='off'>
                   {% csrf_token %}
                   {{ registerForm|crispy }}
