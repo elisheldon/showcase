@@ -39,3 +39,4 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Showcase <noreply@showcaseedu.com>'
 
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+SECURE_SSL_REDIRECT = True
