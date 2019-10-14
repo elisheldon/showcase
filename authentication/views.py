@@ -123,3 +123,6 @@ def social(request):
     else:
         form = SocialForm()
     return render(request, 'authentication/social.html', {'form': form})
+
+def azure(request):
+    return HttpResponseRedirect('https://elasticbeanstalk-us-west-2-315679056419.s3-us-west-2.amazonaws.com/microsoft-identity-association.json')

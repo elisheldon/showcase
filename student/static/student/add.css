@@ -1,0 +1,26 @@
+@media (max-width: 767.98px) {
+  .google_picker_popup{
+      height: 100% !important;
+      width: 100% !important;
+  }
+}
+@media (max-width: 767.98px) {
+  .google_picker_container{
+    height: 80% !important;
+    width: 80% !important;
+    max-height: 1024px;
+    min-width:250px;
+    max-width: 1039px;
+    top:0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    margin: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .google_picker_container{
+    margin-top: 30px !important;
+  }
+}

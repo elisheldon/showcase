@@ -6,8 +6,6 @@ const maxFileSize = 2 //MB
 document.addEventListener('DOMContentLoaded', () => {
   // hide form elements not related to first item type immediately
   renderSubItemOptions(0)
-  $('#photoSizeAlert').hide()
-  $('#fileSizeAlert').hide()
 
   // add event to hide form elements not related to selected item type over 300ms
   document.getElementById('id_sub_item_type').addEventListener('change', () => {
@@ -100,6 +98,7 @@ const renderGalleryPreview = () => {
   }
   if (input.files && input.files[0] && !titleManuallyChanged) {
     document.getElementById('id_title').value = input.files[0].name.replace(/\.[^/.]+$/, "") // removes file extension from filename
+    data.title = document.getElementById('id_title').value
   }
   data.galleryType = true
   prerenderCard(data)
@@ -135,6 +134,7 @@ const typewatch_options = {
 const renderSubItemOptions = duration => {
   const sub_item_type = document.getElementById('id_sub_item_type').value
   document.getElementById('id_url').removeEventListener('click', createGooglePicker)
+  document.getElementById('id_url').removeEventListener('click', launchOneDrivePicker)
   switch(sub_item_type){
     case 'link':
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
@@ -157,6 +157,12 @@ const renderSubItemOptions = duration => {
       })
       getGoogleOAuthToken()
       break
+    case 'onedrive':
+      $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
+        $('#div_id_url').fadeIn(duration)
+      })
+      launchOneDrivePicker()
+      break 
   }
 }
 
@@ -169,6 +175,8 @@ const checkSubmitReady = () => {
   const sub_item_type = document.getElementById('id_sub_item_type').value
   switch(sub_item_type){
     case 'link':
+    case 'drive':
+    case 'onedrive':
       if(!validUrl(document.getElementById('id_url').value)){
         ready = false
       }
@@ -186,6 +194,7 @@ const checkSubmitReady = () => {
             if(!titleManuallyChanged){
               document.getElementById('id_title').value = ''
             }
+            $('#previewDiv').html('')
           }
         }
       }
@@ -202,6 +211,7 @@ const checkSubmitReady = () => {
           if(!titleManuallyChanged){
             document.getElementById('id_title').value = ''
           }
+          $('#previewDiv').html('')
         }
       }
       break
@@ -226,9 +236,9 @@ const validUrl = url => {
   return regexp.test(url)
 }
 
+////////// BEGIN GOOGLE DRIVE //////////
 const googleApiKey = 'AIzaSyCP-EcWv3seHzCc6g862LMtSk3cdqN5yFM'
 const googlePickerScope = 'https://www.googleapis.com/auth/drive.readonly'
-// const googlePickerScope = 'https://www.googleapis.com/auth/drive.file'
 let googlePickerApiLoaded = 'false'
 let googleOAuthToken
 
@@ -253,7 +263,6 @@ function onGooglePickerApiLoad() {
   googlePickerApiLoaded = true
 }
 
-
 function createGooglePicker() {
   if (googlePickerApiLoaded && window.googleOAuthToken) {
     const googlePicker = new google.picker.PickerBuilder().
@@ -263,6 +272,8 @@ function createGooglePicker() {
         setCallback(googlePickerCallback).
         build()
     googlePicker.setVisible(true)
+    $(".picker.shr-q-shr-r-shr-td.picker-dialog-content").addClass("google_picker_popup")
+    $(".picker.shr-q-shr-r.picker-dialog").addClass("google_picker_container")
   }
 }
 
@@ -292,4 +303,23 @@ const getGoogleOAuthToken = async () => {
 window.launchGooglePicker = token => {
   window.googleOAuthToken = token
   createGooglePicker()
+}
+
+////////// END GOOGLE DRIVE //////////
+
+function launchOneDrivePicker(){
+  var odOptions = {
+    clientId: '18c3c49f-bef0-495b-81bd-e0390698acf8',
+    action: 'share',
+    success: function(response) {
+      responseGlobal = response
+      const url = response.value[0].permissions[0].link.webUrl
+      document.getElementById('id_url').value = url
+      document.getElementById('id_url').addEventListener('click', launchOneDrivePicker)
+      loadUrlPreview()
+    },
+    cancel: function() { null},
+    error: function(error) { console.log(error) }
+  }
+  OneDrive.open(odOptions);
 }
