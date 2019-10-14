@@ -134,6 +134,7 @@ const typewatch_options = {
 // hide and show relevant form inputs based on item type
 const renderSubItemOptions = duration => {
   const sub_item_type = document.getElementById('id_sub_item_type').value
+  document.getElementById('id_url').removeEventListener('click', createGooglePicker)
   switch(sub_item_type){
     case 'link':
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
@@ -154,7 +155,7 @@ const renderSubItemOptions = duration => {
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })
-      getGoogleAuthToken()
+      getGoogleOAuthToken()
       break
   }
 }
@@ -226,7 +227,6 @@ const validUrl = url => {
 }
 
 const googleApiKey = 'AIzaSyCP-EcWv3seHzCc6g862LMtSk3cdqN5yFM'
-const googleClientId = '649627438525-pfmf65to8338qmvaeo4gre3mhasgf5at.apps.googleusercontent.com'
 const googlePickerScope = 'https://www.googleapis.com/auth/drive.metadata.readonly'
 // const googlePickerScope = 'https://www.googleapis.com/auth/drive.file'
 let googlePickerApiLoaded = 'false'
@@ -251,19 +251,18 @@ function onGoogleApiLoad() {
 
 function onGooglePickerApiLoad() {
   googlePickerApiLoaded = true
-  createGooglePicker()
 }
 
 
-function createGooglePicker(googleOAuthtoken) {
-  if (googlePickerApiLoaded && googleOAuthtoken) {
+function createGooglePicker() {
+  if (googlePickerApiLoaded && window.googleOAuthToken) {
     const googlePicker = new google.picker.PickerBuilder().
         addView(google.picker.ViewId.DOCS).
-        setOAuthToken(googleOAuthtoken).
+        setOAuthToken(window.googleOAuthToken).
         setDeveloperKey(googleApiKey).
         setCallback(googlePickerCallback).
         build()
-    googlePicker.setVisible(true);
+    googlePicker.setVisible(true)
   }
 }
 
@@ -274,13 +273,23 @@ function googlePickerCallback(data) {
     url = doc[google.picker.Document.URL]
   }
   document.getElementById('id_url').value = url
+  document.getElementById('id_url').addEventListener('click', createGooglePicker)
   loadUrlPreview()
 }
 
-const getGoogleAuthToken = async () => {
-  window.open(window.getGoogleScopesUrl + '?scope=https://www.googleapis.com/auth/drive.metadata.readonly', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')
+const getGoogleOAuthToken = async () => {
+  // check if we have a valid oauth token for the required scope; if not, get it from google
+  response = await fetch('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + window.googleOAuthToken)
+  data = await response.json()
+  if(!data.error && data.scope.includes(googlePickerScope)){
+    createGooglePicker()
+  }
+  else{
+    window.open(window.getGoogleScopesUrl + '?scope=' + googlePickerScope, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')
+  }
 }
 
 window.launchGooglePicker = token => {
-  createGooglePicker(token)
+  window.googleOAuthToken = token
+  createGooglePicker()
 }

@@ -10,7 +10,7 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 class AddForm(forms.Form):
-    sub_item_type_choices = (('link', _('Link')),('gallery', _('Photos')),('document', _('Document upload')),('drive', _('Choose from Google Drive')))
+    sub_item_type_choices = (('link', _('Link')),('drive', _('Choose from Google Drive')),('gallery', _('Photos upload')),('document', _('Document upload')))
     sub_item_type = forms.ChoiceField(label = _('Type'), choices = sub_item_type_choices)
 
     # link inputs
@@ -23,6 +23,7 @@ class AddForm(forms.Form):
     #  file inputs
     file = forms.FileField(
         required=False,
+        label = _('Document* (max size 2MB)'),
         widget=forms.FileInput(attrs={'accept':'.doc, .docx, .htm, .html, .odt, .pdf, .xls, .xlsx, .ods, .ppt, .pptx, .txt, .pages, .numbers, .key'})
     )
 

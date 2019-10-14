@@ -11,11 +11,13 @@
   <script src='{% static "preview/preview.js" %}'></script>
   <script src='{% static "student/card.js" %}'></script>
   <script src='{% static "student/add.js" %}'></script>
+  <script type='text/javascript' src='https://apis.google.com/js/api.js?onload=onGoogleApiLoad'></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'>
   <script>
     window.previewUrl = '{% url "preview:index" %}'
     window.staticUrl = '{% static "" %}'
     window.getGoogleScopesUrl = '{% url "student:get_google_scopes" %}'
+    window.googleOAuthToken = '{{ googleOAuthToken }}'
   </script>
 {% endblock %}
 
@@ -25,13 +27,13 @@
   {% for error in form.errors.photos %}
     <div class='alert alert-danger' role='alert'>{{ error }}</div>
   {% endfor %}
-  <div class="alert alert-danger alert-dismissible fade show" role="alert" id='photoSizeAlert'>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" id='photoSizeAlert' style='display: none'>
     {% trans 'One of the photos you chose is too large. Please try again, making sure each photo is less than 5MB.' %}
     <button type="button" class="close" id='hidePhotoSizeAlert' aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="alert alert-danger alert-dismissible fade show" role="alert" id='fileSizeAlert'>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert" id='fileSizeAlert' style='display: none'>
       {% trans 'The file you chose is too large. Please try again, making sure your file is less than 2MB.' %}
       <button type="button" class="close" id='hideFileSizeAlert' aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -73,11 +75,5 @@
       <br>
     </script>
   {% endverbatim %}
-
-  <button type="button" id="googleAuthBtn" disabled>Authenticate</button>
-
-  <div id="result"></div>
-
-  <script type='text/javascript' src='https://apis.google.com/js/api.js?onload=onGoogleApiLoad'></script>
 
 {% endblock %}

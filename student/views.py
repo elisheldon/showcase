@@ -45,19 +45,28 @@ def portfolio(request):
 def add(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
+    student = Student.objects.get(user = request.user)
+    google_credentials = json.loads(student.google_credentials)
+    if google_credentials['token']:
+        googleOAuthToken = google_credentials['token']
+    else:
+        googleOAuthToken = ''
     if request.method == 'POST':
         form = AddForm(request.POST, request.FILES)
         if form.is_valid():
-            student = Student.objects.get(user = request.user)
             title = form.cleaned_data.get('title')
             description = form.cleaned_data.get('description')
             sub_item_type = form.cleaned_data.get('sub_item_type')
-            if sub_item_type == 'link':
+            if sub_item_type == 'link' or sub_item_type == 'drive':
                 linkType = ContentType.objects.get_for_model(Link)
                 linkCount = Item.objects.filter(student = student, sub_item_type = linkType).count()
                 if linkCount >= 100:
                     messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 100 links per account. Please remove one or more links from your Showcase, then try again.'))
-                    return render(request, 'student/add.html', {'form': form})
+                    context = {
+                        'form': form,
+                        'googleOAuthToken': googleOAuthToken,
+                    }
+                    return render(request, 'student/add.html', context)
                 url = form.cleaned_data.get('url')
                 image = form.cleaned_data.get('image')
                 link = Link.objects.create(url = url, image = image)
@@ -67,17 +76,29 @@ def add(request):
                 galleryCount = Item.objects.filter(student = student, sub_item_type = galleryType).count()
                 if galleryCount >= 20:
                     messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 20 galleries per account. Please remove one or more galleries from your Showcase, then try again.'))
-                    return render(request, 'student/add.html', {'form': form})
+                    context = {
+                        'form': form,
+                        'googleOAuthToken': googleOAuthToken,
+                    }
+                    return render(request, 'student/add.html', context)
                 for file in request.FILES.getlist('photos'):
                     if file.size > 1024*1024*5:
                         messages.add_message(request, messages.ERROR, _('One of the photos you chose is too large. Please try again, making sure each photo is less than 5MB.'))
-                        return render(request, 'student/add.html', {'form': form})
+                        context = {
+                            'form': form,
+                            'googleOAuthToken': googleOAuthToken,
+                        }
+                        return render(request, 'student/add.html', context)
                     try:
                         im = Image.open(file)
                         im.verify()
                     except:    
                         messages.add_message(request, messages.ERROR, _('One of the files you selected was not a valid image. Make sure you select only images to upload, and try again.'))
-                        return render(request, 'student/add.html', {'form': form})
+                        context = {
+                            'form': form,
+                            'googleOAuthToken': googleOAuthToken,
+                        }
+                        return render(request, 'student/add.html', context)
                 gallery = Gallery.objects.create()
                 for file in request.FILES.getlist('photos'):
                     photo = Photo.objects.create(image = file, parent_gallery = gallery)
@@ -90,19 +111,31 @@ def add(request):
                 documentCount = Item.objects.filter(student = student, sub_item_type = documentType).count()
                 if documentCount >= 20:
                     messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 20 documents per account. Please remove one or more documents from your Showcase, then try again.'))
-                    return render(request, 'student/add.html', {'form': form})
+                    context = {
+                        'form': form,
+                        'googleOAuthToken': googleOAuthToken,
+                    }
+                    return render(request, 'student/add.html', context)
                 file = request.FILES['file']
                 if file.size > 1024*1024*2:
                     messages.add_message(request, messages.ERROR, _('The file you chose is too large. Please try again, making sure your file is less than 2MB.'))
                     form.data = form.data.copy()
                     form.data['title'] = ''
-                    return render(request, 'student/add.html', {'form': form})
+                    context = {
+                        'form': form,
+                        'googleOAuthToken': googleOAuthToken,
+                    }
+                    return render(request, 'student/add.html', context)
                 mime = magic.from_buffer(file.read(), mime=True)
                 if mime not in ['application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-powerpoint','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.oasis.opendocument.text','application/vnd.oasis.opendocument.presentation','application/vnd.oasis.opendocument.spreadsheet','application/pdf','text/plain','text/csv','text/html','application/x-iwork-keynote-sffkey','application/x-iwork-pages-sffpages','application/x-iwork-numbers-sffnumbers']:
                     messages.add_message(request, messages.ERROR, _('The file type you chose is not currently allowed. Showcase accepts uploading documents, spreadsheets, presentations and PDFs. Please try again with another file type.'))
                     form.data = form.data.copy()
                     form.data['title'] = ''
-                    return render(request, 'student/add.html', {'form': form})
+                    context = {
+                        'form': form,
+                        'googleOAuthToken': googleOAuthToken,
+                    }
+                    return render(request, 'student/add.html', context)
                 extension = pathlib.Path(file.name).suffix
                 if extension[1:] in ['doc','docx','odt','txt','pages']:
                     icon = 'fas fa-file-alt'
@@ -118,19 +151,30 @@ def add(request):
                     messages.add_message(request, messages.ERROR, _('The file type you chose is not currently allowed. Showcase accepts uploading documents, spreadsheets, presentations and PDFs. Please try again with another file type.'))
                     form.data = form.data.copy()
                     form.data['title'] = ''
-                    return render(request, 'student/add.html', {'form': form})
+                    context = {
+                        'form': form,
+                        'googleOAuthToken': googleOAuthToken,
+                    }
+                    return render(request, 'student/add.html', context)
                 document = Document.objects.create(file = file, icon = icon)
                 item = Item.objects.create(student = student, sub_item = document, title = title, description = description)
             messages.add_message(request, messages.SUCCESS, _('Successfully added %(title)s to your portfolio.') % {'title': title})
             return HttpResponseRedirect(reverse('student:add'))
         else:
-            return render(request, 'student/add.html', {'form': form})
+            context = {
+                'form': form,
+                'googleOAuthToken': googleOAuthToken,
+            }
+            return render(request, 'student/add.html', context)
     else:
         form = AddForm()
-        student = Student.objects.get(user = request.user)
+        context = {
+            'form': form,
+            'googleOAuthToken': googleOAuthToken,
+        }
         if student.age < 13:
             messages.add_message(request, messages.INFO, _('Stay safe! Remember not to include any personal information when adding an item to your Showcase.'))
-        return render(request, 'student/add.html', {'form': form})
+        return render(request, 'student/add.html', context)
 
 def remove(request):
     if not student_check(request):
@@ -167,7 +211,6 @@ def public(request):
     student = Student.objects.get(user = request.user)
     try:
         student.pf_public = pf_public
-        print(pf_public)
         student.save()
     except:
         raise PermissionDenied
@@ -209,9 +252,6 @@ def get_google_scopes(request):
         credentials = flow.credentials
         student.google_credentials = json.dumps({'token': credentials.token, 'refresh_token': credentials.refresh_token, 'token_uri': credentials.token_uri, 'client_id': credentials.client_id, 'client_secret': credentials.client_secret, 'scopes': credentials.scopes})
         student.save()
-        #return HttpResponse(flow.credentials.token)
-        print(credentials.token)
-        #return HttpResponse('<script type="text/javascript">window.opener.parent.googleAuthToken = "' + credentials.token + '";</script>')
         return HttpResponse('<script type="text/javascript">window.opener.launchGooglePicker("' + credentials.token + '");window.close()</script>')
     else:
         try:
