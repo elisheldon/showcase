@@ -125,4 +125,6 @@ def social(request):
     return render(request, 'authentication/social.html', {'form': form})
 
 def azure(request):
-    return HttpResponseRedirect('https://elasticbeanstalk-us-west-2-315679056419.s3-us-west-2.amazonaws.com/microsoft-identity-association.json')
+    response = HttpResponse(content='{"associatedApplications":[{"applicationId":"18c3c49f-bef0-495b-81bd-e0390698acf8"}]}', content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="microsoft-identity-association.json"'
+    return response

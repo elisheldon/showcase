@@ -10,7 +10,7 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 class AddForm(forms.Form):
-    sub_item_type_choices = (('link', _('Link')),('drive', _('Choose from Google Drive')),('onedrive', _('Choose from OneDrive')), ('gallery', _('Photos upload')),('document', _('Document upload')))
+    sub_item_type_choices = (('link', _('Link')),('drive', _('Choose from Google Drive')),('onedrive', _('Choose from OneDrive')), ('gallery', _('Upload photos')),('document', _('Upload a document')))
     sub_item_type = forms.ChoiceField(label = _('Type'), choices = sub_item_type_choices)
 
     # link inputs
