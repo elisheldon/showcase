@@ -46,12 +46,11 @@ def add(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
     student = Student.objects.get(user = request.user)
-    if student.google_credentials:
+    try:
         google_credentials = json.loads(student.google_credentials)
-        if google_credentials['token']:
-            googleOAuthToken = google_credentials['token']
-        else:
-            googleOAuthToken = ''
+        googleOAuthToken = google_credentials['token']
+    except:
+        googleOAuthToken = ''
     if request.method == 'POST':
         form = AddForm(request.POST, request.FILES)
         if form.is_valid():
