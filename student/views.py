@@ -7,10 +7,14 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.contrib.contenttypes.models import ContentType
-from json import loads
+import json
 from PIL import Image
 import pathlib
 import magic
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
+import os
+import requests
 
 from student.models import Student, Item, Link, Gallery, Photo, Document
 from .forms import AddForm
@@ -131,7 +135,7 @@ def add(request):
 def remove(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
-    item_id = loads(request.body)['item_id']
+    item_id = json.loads(request.body)['item_id']
     student = Student.objects.get(user = request.user)
     try:
         item = Item.objects.get(pk = item_id, student = student)
@@ -159,7 +163,7 @@ def gallery(request, item_id):
 def public(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
-    pf_public = loads(request.body)['public']
+    pf_public = json.loads(request.body)['public']
     student = Student.objects.get(user = request.user)
     try:
         student.pf_public = pf_public
@@ -183,4 +187,37 @@ def view(request, username):
         'name': student.user.first_name,
     }
     return render(request, 'student/view.html', context)
+       
 
+def get_google_scopes(request):
+    user = request.user
+    student = Student.objects.get(user = user)
+    if request.GET.get('scope') and not request.GET.get('code'):
+        # scope set by Showcase code, lack of code param indicates this is not a successful callback from Google
+        scopes = request.GET.get('scope').split(' ')
+        flow = google_auth_oauthlib.flow.Flow.from_client_config(json.loads(os.environ['GOOGLE_CONFIG']), scopes)
+        flow.redirect_uri = request.build_absolute_uri(reverse('student:get_google_scopes'))
+        authorization_url, state = flow.authorization_url(include_granted_scopes='true', access_type='offline')
+        response = HttpResponseRedirect(authorization_url)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
+    elif request.GET.get('code'):
+        # code param indicates this is a successful callback from Google
+        flow = google_auth_oauthlib.flow.Flow.from_client_config(json.loads(os.environ['GOOGLE_CONFIG']), request.GET.get('scope'))
+        flow.redirect_uri = request.build_absolute_uri(reverse('student:get_google_scopes'))
+        flow.fetch_token(code = request.GET.get('code'))
+        credentials = flow.credentials
+        student.google_credentials = json.dumps({'token': credentials.token, 'refresh_token': credentials.refresh_token, 'token_uri': credentials.token_uri, 'client_id': credentials.client_id, 'client_secret': credentials.client_secret, 'scopes': credentials.scopes})
+        student.save()
+        #return HttpResponse(flow.credentials.token)
+        print(credentials.token)
+        #return HttpResponse('<script type="text/javascript">window.opener.parent.googleAuthToken = "' + credentials.token + '";</script>')
+        return HttpResponse('<script type="text/javascript">window.opener.launchGooglePicker("' + credentials.token + '");window.close()</script>')
+    else:
+        try:
+            return HttpResponse(request.GET.get('error'))
+        except:
+            return HttpResponse('An unknown error occurred', status=500)
+
+    
+        

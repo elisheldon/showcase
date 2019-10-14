@@ -15,6 +15,7 @@
   <script>
     window.previewUrl = '{% url "preview:index" %}'
     window.staticUrl = '{% static "" %}'
+    window.getGoogleScopesUrl = '{% url "student:get_google_scopes" %}'
   </script>
 {% endblock %}
 
@@ -72,4 +73,11 @@
       <br>
     </script>
   {% endverbatim %}
+
+  <button type="button" id="googleAuthBtn" disabled>Authenticate</button>
+
+  <div id="result"></div>
+
+  <script type='text/javascript' src='https://apis.google.com/js/api.js?onload=onGoogleApiLoad'></script>
+
 {% endblock %}

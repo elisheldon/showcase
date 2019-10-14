@@ -15,6 +15,7 @@ class Student(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        related_name='student',
     )
     classrooms = models.ManyToManyField(
         Classroom,
@@ -26,6 +27,11 @@ class Student(models.Model):
     )
     pf_public = models.BooleanField(
         default = False,
+    )
+    google_credentials = models.CharField(
+        max_length = 1024,
+        blank = True,
+        null = True,
     )
     def __str__(self):
         return self.user.username

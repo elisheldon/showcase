@@ -150,6 +150,12 @@ const renderSubItemOptions = duration => {
         $('#div_id_file').fadeIn(duration)
       })
       break
+    case 'drive':
+      $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
+        $('#div_id_url').fadeIn(duration)
+      })
+      getGoogleAuthToken()
+      break
   }
 }
 
@@ -217,4 +223,64 @@ const clearForm = () => {
 const validUrl = url => {
   const regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
   return regexp.test(url)
+}
+
+const googleApiKey = 'AIzaSyCP-EcWv3seHzCc6g862LMtSk3cdqN5yFM'
+const googleClientId = '649627438525-pfmf65to8338qmvaeo4gre3mhasgf5at.apps.googleusercontent.com'
+const googlePickerScope = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+// const googlePickerScope = 'https://www.googleapis.com/auth/drive.file'
+let googlePickerApiLoaded = 'false'
+let googleOAuthToken
+
+function onGoogleApiLoad() {
+  //gapi.load('auth2', onGoogleAuthApiLoad)
+  gapi.load('picker', onGooglePickerApiLoad)
+}
+
+/*function onGoogleAuthApiLoad() {
+  const googleAuthBtn = document.getElementById('googleAuthBtn')
+  googleAuthBtn.disabled = false
+  googleAuthBtn.addEventListener('click', function() {
+    gapi.auth2.init({ client_id: googleClientId }).then(function(googleAuth) {
+      googleAuth.signIn({ scope: googlePickerScope }).then(function(result) {
+        handleGoogleAuthResult(result.getAuthResponse())
+      })
+    })
+  })
+}*/
+
+function onGooglePickerApiLoad() {
+  googlePickerApiLoaded = true
+  createGooglePicker()
+}
+
+
+function createGooglePicker(googleOAuthtoken) {
+  if (googlePickerApiLoaded && googleOAuthtoken) {
+    const googlePicker = new google.picker.PickerBuilder().
+        addView(google.picker.ViewId.DOCS).
+        setOAuthToken(googleOAuthtoken).
+        setDeveloperKey(googleApiKey).
+        setCallback(googlePickerCallback).
+        build()
+    googlePicker.setVisible(true);
+  }
+}
+
+function googlePickerCallback(data) {
+  let url = '';
+  if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+    const doc = data[google.picker.Response.DOCUMENTS][0]
+    url = doc[google.picker.Document.URL]
+  }
+  document.getElementById('id_url').value = url
+  loadUrlPreview()
+}
+
+const getGoogleAuthToken = async () => {
+  window.open(window.getGoogleScopesUrl + '?scope=https://www.googleapis.com/auth/drive.metadata.readonly', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')
+}
+
+window.launchGooglePicker = token => {
+  createGooglePicker(token)
 }

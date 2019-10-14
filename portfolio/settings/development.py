@@ -18,7 +18,7 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/uploads/'
 
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.15']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.15', 'localhost',]
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')

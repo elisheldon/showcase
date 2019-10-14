@@ -37,3 +37,5 @@ EMAIL_HOST_USER = os.environ['SES_USERNAME']
 EMAIL_HOST_PASSWORD = os.environ['SES_PASSWORD']
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Showcase <noreply@showcaseedu.com>'
+
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True

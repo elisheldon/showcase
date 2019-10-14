@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext as _
 from hashlib import sha1
+import json
 
 from teacher.models import Teacher
 from student.models import Student
@@ -105,7 +106,7 @@ def social(request):
                     user.email = sha1(user.email.encode()).hexdigest()
                     user.last_name = None
                 user.save()
-                student = Student.objects.create(user = user, age = age)
+                student = Student.objects.create(user = user, age = age, google_credentials = json.dumps({'token': request.user.social_auth.get(provider='google-oauth2').extra_data['access_token']}))
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
             elif user_type == 'teacher':
