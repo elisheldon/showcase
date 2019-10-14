@@ -227,7 +227,7 @@ const validUrl = url => {
 }
 
 const googleApiKey = 'AIzaSyCP-EcWv3seHzCc6g862LMtSk3cdqN5yFM'
-const googlePickerScope = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+const googlePickerScope = 'https://www.googleapis.com/auth/drive.readonly'
 // const googlePickerScope = 'https://www.googleapis.com/auth/drive.file'
 let googlePickerApiLoaded = 'false'
 let googleOAuthToken
