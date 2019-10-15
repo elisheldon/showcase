@@ -155,12 +155,14 @@ const renderSubItemOptions = duration => {
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })
+      document.getElementById('id_url').addEventListener('click', createGooglePicker)
       getGoogleOAuthToken()
       break
     case 'onedrive':
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })
+      document.getElementById('id_url').addEventListener('click', launchOneDrivePicker)
       launchOneDrivePicker()
       break 
   }
@@ -238,29 +240,34 @@ const validUrl = url => {
 
 ////////// BEGIN GOOGLE DRIVE //////////
 const googleApiKey = 'AIzaSyCP-EcWv3seHzCc6g862LMtSk3cdqN5yFM'
-const googlePickerScope = 'https://www.googleapis.com/auth/drive.readonly'
+const googlePickerScope = 'https://www.googleapis.com/auth/drive'
 let googlePickerApiLoaded = 'false'
 let googleOAuthToken
 
 function onGoogleApiLoad() {
-  //gapi.load('auth2', onGoogleAuthApiLoad)
-  gapi.load('picker', onGooglePickerApiLoad)
+  gapi.load('picker:client', onGooglePickerApiLoad)
 }
-
-/*function onGoogleAuthApiLoad() {
-  const googleAuthBtn = document.getElementById('googleAuthBtn')
-  googleAuthBtn.disabled = false
-  googleAuthBtn.addEventListener('click', function() {
-    gapi.auth2.init({ client_id: googleClientId }).then(function(googleAuth) {
-      googleAuth.signIn({ scope: googlePickerScope }).then(function(result) {
-        handleGoogleAuthResult(result.getAuthResponse())
-      })
-    })
-  })
-}*/
 
 function onGooglePickerApiLoad() {
   googlePickerApiLoaded = true
+}
+
+const getGoogleOAuthToken = async () => {
+  // check if we have a valid oauth token for the required scope; if not, get it from google
+  const response = await fetch('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + window.googleOAuthToken)
+  let data = await response.json()
+  data.scope = data.scope + ' ' //// add the space here and below to prevent for example drive.readonly false positive for drive
+  if(!data.error && data.scope.includes(googlePickerScope + ' ')){ 
+    createGooglePicker()
+  }
+  else{
+    window.open(window.getGoogleScopesUrl + '?scope=' + googlePickerScope, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')
+  }
+}
+
+window.launchGooglePicker = token => {
+  window.googleOAuthToken = token
+  createGooglePicker()
 }
 
 function createGooglePicker() {
@@ -281,28 +288,34 @@ function googlePickerCallback(data) {
   let url = '';
   if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
     const doc = data[google.picker.Response.DOCUMENTS][0]
-    url = doc[google.picker.Document.URL]
-  }
-  document.getElementById('id_url').value = url
-  document.getElementById('id_url').addEventListener('click', createGooglePicker)
-  loadUrlPreview()
-}
-
-const getGoogleOAuthToken = async () => {
-  // check if we have a valid oauth token for the required scope; if not, get it from google
-  response = await fetch('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + window.googleOAuthToken)
-  data = await response.json()
-  if(!data.error && data.scope.includes(googlePickerScope)){
-    createGooglePicker()
+    fileID = doc[google.picker.Document.ID]
+    const request = gapi.client.request({
+      'path': '/drive/v3/files/' + fileID + '/permissions',
+      'method': 'POST',
+      'headers': {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.googleOAuthToken
+      },
+      'body':{
+        'role': 'reader',
+        'type': 'anyone'
+      }
+    })
+    request.execute(function(response) {
+      url = doc[google.picker.Document.URL]
+      document.getElementById('id_url').value = url
+      loadUrlPreview()
+    })
   }
   else{
-    window.open(window.getGoogleScopesUrl + '?scope=' + googlePickerScope, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')
+    document.getElementById('id_url').value = url
+    loadUrlPreview()
   }
 }
 
-window.launchGooglePicker = token => {
-  window.googleOAuthToken = token
-  createGooglePicker()
+const shareGoogleFile = (doc) => {
+
+
 }
 
 ////////// END GOOGLE DRIVE //////////
@@ -315,7 +328,6 @@ function launchOneDrivePicker(){
       responseGlobal = response
       const url = response.value[0].permissions[0].link.webUrl
       document.getElementById('id_url').value = url
-      document.getElementById('id_url').addEventListener('click', launchOneDrivePicker)
       loadUrlPreview()
     },
     cancel: function() { null},
