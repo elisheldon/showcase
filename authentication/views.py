@@ -106,7 +106,10 @@ def social(request):
                     user.email = sha1(user.email.encode()).hexdigest()
                     user.last_name = None
                 user.save()
-                student = Student.objects.create(user = user, age = age, google_credentials = json.dumps({'token': request.user.social_auth.get(provider='google-oauth2').extra_data['access_token']}))
+                try:
+                    student = Student.objects.create(user = user, age = age, google_credentials = json.dumps({'token': request.user.social_auth.get(provider='google-oauth2').extra_data['access_token']}))
+                except:
+                    student = Student.objects.create(user = user, age = age, azure_credentials = json.dumps({'token': request.user.social_auth.get(provider='microsoft-graph').extra_data['access_token']}))
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
             elif user_type == 'teacher':

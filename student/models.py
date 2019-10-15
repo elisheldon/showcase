@@ -33,6 +33,11 @@ class Student(models.Model):
         blank = True,
         null = True,
     )
+    azure_credentials = models.CharField(
+        max_length = 4096,
+        blank = True,
+        null = True,
+    )
     def __str__(self):
         return self.user.username
 

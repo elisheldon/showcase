@@ -111,6 +111,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.microsoft.MicrosoftOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -123,3 +124,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
     'openid',
 ]
+
+SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = '18c3c49f-bef0-495b-81bd-e0390698acf8'
+SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = os.environ['AZURE_SECRET']

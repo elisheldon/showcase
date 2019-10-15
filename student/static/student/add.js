@@ -285,7 +285,6 @@ function createGooglePicker() {
 }
 
 function googlePickerCallback(data) {
-  let url = '';
   if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
     const doc = data[google.picker.Response.DOCUMENTS][0]
     fileID = doc[google.picker.Document.ID]
@@ -302,20 +301,15 @@ function googlePickerCallback(data) {
       }
     })
     request.execute(function(response) {
-      url = doc[google.picker.Document.URL]
+      const url = doc[google.picker.Document.URL]
       document.getElementById('id_url').value = url
       loadUrlPreview()
     })
   }
   else{
-    document.getElementById('id_url').value = url
+    document.getElementById('id_url').value = ''
     loadUrlPreview()
   }
-}
-
-const shareGoogleFile = (doc) => {
-
-
 }
 
 ////////// END GOOGLE DRIVE //////////
