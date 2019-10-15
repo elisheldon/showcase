@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Teacher, Classroom
+from .models import Staff, School
 
 # Register your models here.
-admin.site.register(Teacher)
-admin.site.register(Classroom)
+admin.site.register(Staff)
+admin.site.register(School)

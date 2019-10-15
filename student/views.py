@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import gettext as _
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -16,7 +15,7 @@ import google_auth_oauthlib.flow
 import os
 import requests
 
-from student.models import Student, Item, Link, Gallery, Photo, Document
+from .models import Student, Item, Link, Gallery, Photo, Document
 from .forms import AddForm
 
 def student_check(request):

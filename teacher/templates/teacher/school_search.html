@@ -1,0 +1,19 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Find Your School' %}{% endblock %}
+
+{% block body %}
+<h2>{% trans 'Find Your School' %}</h2>
+  {% trans 'Showcase can search for schools in the United States if you fill in one or more fields below. You do not need to enter everything!' %}
+  <form id='school_search_form' action='{% url "teacher:schoolSearch" %}' method='post' autocomplete='off'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type='submit' id='submit_form_btn' disabled class='btn btn-primary'>{% trans 'Search' %}</button>
+  </form>
+  <br>
+  {% trans 'If your school is located in another country or is very new, you can add it manually by clicking here.' %}
+{% endblock %}

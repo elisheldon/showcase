@@ -137,6 +137,7 @@ const renderSubItemOptions = duration => {
   document.getElementById('id_url').removeEventListener('click', launchOneDrivePicker)
   switch(sub_item_type){
     case 'link':
+      $('#hint_id_url').hide()
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })
@@ -152,6 +153,7 @@ const renderSubItemOptions = duration => {
       })
       break
     case 'drive':
+      $('#hint_id_url').show()
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })
@@ -159,6 +161,7 @@ const renderSubItemOptions = duration => {
       getGoogleOAuthToken()
       break
     case 'onedrive':
+      $('#hint_id_url').show()
       $('#div_id_photos, #div_id_file').fadeOut(duration).promise().done(function(){
         $('#div_id_url').fadeIn(duration)
       })

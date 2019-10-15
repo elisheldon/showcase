@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 from hashlib import sha1
 import json
 
-from teacher.models import Teacher
+from teacher.models import Staff, School
 from student.models import Student
 from .forms import LoginForm, RegistrationForm, SocialForm
 from student.views import student_check
@@ -19,6 +19,8 @@ def index(request):
     if request.user.is_authenticated:
         if request.user.groups.filter(name='students').exists():
             return HttpResponseRedirect(reverse('student:portfolio'))
+        elif request.user.groups.filter(name='staff').exists():
+            return HttpResponseRedirect(reverse('teacher:index'))
         else:
             return HttpResponseRedirect(reverse('authentication:social'))
     loginForm = LoginForm(prefix='login')
@@ -39,10 +41,10 @@ def loginUser(request):
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             if request.user.groups.filter(name='students').exists():
                 return HttpResponseRedirect(reverse('student:portfolio'))
-            elif request.user.groups.filter(name='teachers').exists():
+            elif request.user.groups.filter(name='staff').exists():
                 return HttpResponseRedirect(reverse('teachers:index'))
             else:
-                return HttpResponse('You are not a student or a teacher.')
+                return HttpResponse('You are not a student or a staff member.')
         else:
             messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))
             return HttpResponseRedirect(reverse('authentication:index'))
@@ -74,12 +76,12 @@ def register(request):
                 student = Student.objects.create(user = user, age = age)
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
-            elif user_type == 'teacher':
-                group = Group.objects.get(name='teachers')
+            elif user_type == 'staff':
+                group = Group.objects.get(name='staff')
                 user.groups.add(group)
                 user.save()
-                teacher = Teacher(user = user)
-                teacher.save()
+                staff = Staff(user = user)
+                staff.save()
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('teacher:index'))
     else:
@@ -112,15 +114,15 @@ def social(request):
                     student = Student.objects.create(user = user, age = age, azure_credentials = json.dumps({'token': request.user.social_auth.get(provider='microsoft-graph').extra_data['access_token']}))
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
-            elif user_type == 'teacher':
-                group = Group.objects.get(name='teachers')
+            elif user_type == 'staff':
+                group = Group.objects.get(name='staff')
                 user.groups.add(group)
                 if age < 13:
                     user.email = sha1(user.email.encode()).hexdigest()
                     user.last_name = None
                 user.save()
-                teacher = Teacher(user = user)
-                teacher.save()
+                staff = Staff(user = user)
+                staff.save()
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('teacher:index'))
     else:

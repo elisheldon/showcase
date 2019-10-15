@@ -8,19 +8,12 @@ import os
 from io import BytesIO
 from PIL import Image
 
-from teacher.models import Classroom
-
 # Create your models here.
 class Student(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='student',
-    )
-    classrooms = models.ManyToManyField(
-        Classroom,
-        blank = True,
-        related_name = 'students'
     )
     age = models.SmallIntegerField(
         default = 0,

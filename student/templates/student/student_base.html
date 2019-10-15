@@ -3,10 +3,6 @@
 {% load static %}
 {% load i18n %}
 
-{% block scripts %}
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.2.0/handlebars.min.js'></script>
-{% endblock %}
-
 {% block navlinks %}
   <a class="nav-item nav-link" href='{% url "student:portfolio" %}'>{% trans 'My Showcase' %}</a>
   <a class="nav-item nav-link" href='{% url "student:add" %}'>{% trans 'Add Item' %}</a>

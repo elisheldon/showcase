@@ -14,7 +14,7 @@ class AddForm(forms.Form):
     sub_item_type = forms.ChoiceField(label = _('Type'), choices = sub_item_type_choices)
 
     # link inputs
-    url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()], widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
+    url = forms.CharField(label = _('URL*'), required=False, validators=[OptionalSchemeURLValidator()], help_text=_('Files you choose will have a shareable link generated if necessary.'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
     image = forms.CharField(widget = forms.HiddenInput(), required=False)
 
     # gallery inputs

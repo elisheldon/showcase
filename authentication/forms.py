@@ -11,11 +11,12 @@ class LoginForm(forms.Form):
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(label = _('Username'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
+    user_type_choices = (('student',_('Student')),('staff',_('Teacher or other staff member')))
+    user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
     first_name = forms.CharField(label = _('First name'))
     age = forms.IntegerField(label = _('Age'), min_value=1, max_value=100)
     email = forms.EmailField(label = _('Email address'))
-    user_type_choices = (('student',_('Student')),('teacher',_('Teacher')))
-    user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
+    school_code = forms.CharField(label = _('School code (optional)'), required=False, help_text=_('Don\'t worry if you don\'t have one! You can add or create one later.'))
     password1 = forms.CharField(label = _('Password'), widget = forms.PasswordInput)
     password2 = forms.CharField(label = _('Confirm password'), help_text=_('Enter the same password as above, for verification.'), widget = forms.PasswordInput)
     terms = forms.BooleanField(label = _('I agree to the <a href="https://showcaseedu.com/terms">Terms of Service</a> and <a href="https://showcaseedu.com/privacy">Privacy Policy</a>. If I am under 13 years of age, I confirm that I have my parent or legal guardian\'s permission to use Showcase.'))
@@ -71,7 +72,8 @@ class PasswordResetFormCoppa(PasswordResetForm):
             return (u for u in active_users if u.has_usable_password())
 
 class SocialForm(forms.Form):
-    user_type_choices = (('student',_('Student')),('teacher',_('Teacher')))
+    user_type_choices = (('student',_('Student')),('staff',_('Teacher or other staff member')))
     user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
     age = forms.IntegerField(label = _('Age'), min_value=1, max_value=100)
+    school_code = forms.CharField(label = _('School code (optional)'), required=False, help_text=_('Don\'t worry if you don\'t have one! You can add or create one later.'))
     terms = forms.BooleanField(label = _('I agree to the <a href="https://showcaseedu.com/terms">Terms of Service</a> and <a href="https://showcaseedu.com/privacy">Privacy Policy</a>. If I am under 13 years of age, I confirm that I have my parent or legal guardian\'s permission to use Showcase.'))
