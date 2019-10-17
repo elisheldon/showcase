@@ -2,6 +2,8 @@ from django import forms
 from django.utils.translation import gettext as _
 from django.core.validators import URLValidator
 
+from teacher.models import School
+
 # https://stackoverflow.com/questions/49983328/cleanest-way-to-allow-empty-scheme-in-django-urlfield
 class OptionalSchemeURLValidator(URLValidator):
     def __call__(self, value):
@@ -40,3 +42,17 @@ class AddForm(forms.Form):
         if url[0:4] != 'http':
             url = 'http://' + url
         return url
+
+class SettingsForm(forms.Form):
+    code = forms.CharField(label=_('School code'), required=False, max_length=6)
+    
+    def clean_code(self):
+        code = self.cleaned_data.get('code')
+        if code:
+            try:
+                school = School.objects.get(student_code = code)
+            except:
+                raise forms.ValidationError(
+                    _('That school code is not valid, please try another.'),
+                )
+        return code

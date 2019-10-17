@@ -6,7 +6,7 @@
   }
 }
 
-@media (min-width: 770) {
+@media (min-width: 770px) {
   ul {
     columns: 2;
     -webkit-columns: 2;

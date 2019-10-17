@@ -16,7 +16,7 @@ import os
 import requests
 
 from .models import Student, Item, Link, Gallery, Photo, Document
-from .forms import AddForm
+from .forms import AddForm, SettingsForm
 from teacher.models import School, Staff
 
 def student_check(request):
@@ -269,4 +269,25 @@ def get_google_scopes(request):
 def settings(request):
     if not student_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
-    return render(request, 'student/settings.html')
+    student = Student.objects.get(user = request.user)
+    school = None
+    if request.method == 'POST':
+        form = SettingsForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data.get('code')
+            student.school_code = code
+            student.save()
+            if code:
+                school = School.objects.get(student_code = code)
+                messages.add_message(request, messages.SUCCESS, _('Successfully joined ') + school.name)
+    else:
+        form = SettingsForm(initial={'code': student.school_code })
+        try:
+            school = School.objects.get(student_code = student.school_code)
+        except:
+            None
+    context = {
+        'form': form,
+        'school': school,
+    }
+    return render(request, 'student/settings.html', context)

@@ -20,7 +20,7 @@ class AddSchoolForm(forms.Form):
     confirmed = forms.BooleanField(widget = forms.HiddenInput(), initial=False, required=False)
 
 class SettingsForm(forms.Form):
-    code = forms.CharField(label=_('School staff code'))
+    code = forms.CharField(label=_('School staff code'), max_length=6)
     
     def clean_code(self):
         code = self.cleaned_data.get('code')

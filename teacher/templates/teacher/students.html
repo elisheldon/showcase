@@ -12,23 +12,27 @@
 
 {% block body %}
   <h2>{% blocktrans with school=school.name %}Students at {{ school }}{% endblocktrans %}</h2>
-  <p>{% blocktrans with code=school.student_code %}Click on student to view their Showcase portfolio. Additional students can join by using <b>{{ code }}</b> as your school code. They can enter this when they register, or by clicking on their name and going to Settings after registration.{% endblocktrans %}</p>
-  <input class="form-control" id="studentSearch" type="text" placeholder="Search...">
-  <br>
-  <ul>
-  {% for student in students %}
-    <li><a href='https://showcaseedu.com/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a></li>
-  {% endfor %}
-  </ul>
+  {% if students %}
+    <p>{% blocktrans with code=school.student_code %}Click on a student to view their Showcase portfolio. Students can join your school by using <b>{{ code }}</b> as the school code, which they can enter this when they register, or by clicking on their name and going to Settings after registration.{% endblocktrans %}</p>
+    <input class="form-control" id="studentSearch" type="text" placeholder="Search...">
+    <br>
+    <ul>
+    {% for student in students %}
+      <li><a href='https://showcaseedu.com/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a></li>
+    {% endfor %}
+    </ul>
 
-  <script>
-    $(document).ready(function(){
-      $("#studentSearch").on("keyup", function() {
-        const value = $(this).val().toLowerCase()
-        $("li").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    <script>
+      $(document).ready(function(){
+        $("#studentSearch").on("keyup", function() {
+          const value = $(this).val().toLowerCase()
+          $("li").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          })
         })
       })
-    })
-  </script> 
+    </script> 
+  {% else %}
+    <p>{% blocktrans with name=school.name code=school.student_code %}There aren't any students on Showcase that have joined {{ name }} yet. Students can join your school by using <b>{{ code }}</b> as the school code, which they can enter this when they register, or by clicking on their name and going to Settings after registration.{% endblocktrans %}</p>
+  {% endif %}
 {% endblock %}

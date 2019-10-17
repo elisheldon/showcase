@@ -11,9 +11,13 @@
 {% block title %}{% trans 'Settings' %}{% endblock %}
 
 {% block body %}
-  <form id='change_code_form' action='{% url "student:change_code" %}' method='post'>
+  <form id='settings_form' action='{% url "student:settings" %}' method='post'>
     {% csrf_token %}
-    <input type='text' aria-label="{% trans 'School code' %}" name='code'>
+    {{ form|crispy }}
+    {% if school %}
+      <small class='form-text text-muted'>{% trans 'Currently: ' %}{{ school.name }}</small>
+      <br>
+    {% endif %}
     <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
   </form>
 {% endblock %}
