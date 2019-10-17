@@ -17,6 +17,7 @@ import requests
 
 from .models import Student, Item, Link, Gallery, Photo, Document
 from .forms import AddForm
+from teacher.models import School, Staff
 
 def student_check(request):
     # checks to see if the current user is in the students group
@@ -218,8 +219,15 @@ def public(request):
 def view(request, username):
     try:
         student = Student.objects.get(user__username = username)
-        if not student.pf_public:
-            raise ValueError('private')
+        teacher_view = False
+        if student.school_code:
+            school = School.objects.get(student_code = student.school_code)
+            if request.user.groups.filter(name='staff').exists(): #if the viewing user is a staff member of any school
+                staff = Staff.objects.get(user = request.user)
+                if staff in school.staff.all():
+                    teacher_view = True
+        if not student.pf_public and not teacher_view:
+            raise ValueError('private') #just triggers the except below
     except:
         messages.add_message(request, messages.ERROR, _('That student does not exist or has set their Showcase to be private.'))
         return HttpResponseRedirect(reverse('authentication:index'))

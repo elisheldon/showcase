@@ -1,0 +1,34 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block scripts %}
+  {{ block.super }}
+{% endblock %}
+
+{% block title %}{% trans 'My Students' %}{% endblock %}
+
+{% block body %}
+  <h2>{% blocktrans with school=school.name %}Students at {{ school }}{% endblocktrans %}</h2>
+  <p>{% blocktrans with code=school.student_code %}Click on student to view their Showcase portfolio. Additional students can join by using <b>{{ code }}</b> as your school code. They can enter this when they register, or by clicking on their name and going to Settings after registration.{% endblocktrans %}</p>
+  <input class="form-control" id="studentSearch" type="text" placeholder="Search...">
+  <br>
+  <ul>
+  {% for student in students %}
+    <li><a href='https://showcaseedu.com/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a></li>
+  {% endfor %}
+  </ul>
+
+  <script>
+    $(document).ready(function(){
+      $("#studentSearch").on("keyup", function() {
+        const value = $(this).val().toLowerCase()
+        $("li").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        })
+      })
+    })
+  </script> 
+{% endblock %}

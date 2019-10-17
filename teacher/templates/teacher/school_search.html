@@ -24,10 +24,12 @@
   {% if schools %}
     <script>window.location.hash = '#id_state'</script>
     <ul>
-    {% for school in schools %}
+    {% for school in schools|dictsort:'name' %}
       <li><a href='{% url "teacher:schoolDetails" school.id %}'><b>{{ school.name }}</b> - {{ school.address }}, {{ school.city }}, {{ school.state }} {{ school.zip }}</a></li>
     {% endfor %}
     </ul>
+    {% trans 'Don\'t see your school? Only the first 100 results are returned, so try narrowing your search down. If you still can\'t find it, you can add your school manually by clicking ' %}<a href='{% url "teacher:addSchool" %}'>{% trans 'here' %}</a>.
+  {% else %}
     {% trans 'Don\'t see your school? You can add your school manually by clicking ' %}<a href='{% url "teacher:addSchool" %}'>{% trans 'here' %}</a>.
   {% endif %}
   <br>

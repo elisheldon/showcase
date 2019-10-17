@@ -13,6 +13,7 @@ import string
 
 from .forms import SchoolSearchForm, AddSchoolForm, SettingsForm
 from .models import School, Staff
+from student.models import Student
 
 def teacher_check(request):
     # checks to see if the current user is in the teachers group
@@ -25,7 +26,17 @@ def teacher_check(request):
 def index(request):
     if not teacher_check(request):
         return HttpResponseRedirect(reverse('authentication:index'))
-    return render(request, 'teacher/teacher_base.html')
+    staff = Staff.objects.get(user = request.user)
+    schools = School.objects.filter(staff = staff)
+    school = schools.first()
+    if schools.count() == 0:
+        return HttpResponseRedirect(reverse('teachers:schoolSearch'))
+    students = Student.objects.filter(school_code = school.student_code)
+    context = {
+        'school': school,
+        'students': students,
+    }
+    return render(request, 'teacher/students.html', context)
 
 def schoolSearch(request):
     if not teacher_check(request):
@@ -37,7 +48,7 @@ def schoolSearch(request):
             city = form.cleaned_data.get('city')
             state = form.cleaned_data.get('state')
             zip = form.cleaned_data.get('zip')
-            schools = School.objects.filter(name__icontains=name, city__icontains=city, state__icontains=state, zip__contains=zip)[:50]
+            schools = School.objects.filter(name__icontains=name, city__icontains=city, state__icontains=state, zip__contains=zip)[:100]
             error = ''
             if schools.count() == 0:
                 error = _('No schools found matching your search.')

@@ -31,6 +31,11 @@ class Student(models.Model):
         blank = True,
         null = True,
     )
+    school_code = models.CharField(
+        max_length = 6,
+        blank = True,
+        null = True,
+    )
     def __str__(self):
         return self.user.username
 
