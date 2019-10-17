@@ -16,7 +16,7 @@ from .models import School, Staff
 from student.models import Student
 
 def teacher_check(request):
-    # checks to see if the current user is in the teachers group
+    # checks to see if the current user is in the staff group
     is_teacher = request.user.groups.filter(name='staff').exists()
     if not is_teacher:
         messages.add_message(request, messages.ERROR, _('You attempted to access a staff page, but you are not logged in as a staff member. Log in as a staff member and try again.'))
@@ -30,7 +30,7 @@ def index(request):
     schools = School.objects.filter(staff = staff)
     school = schools.first()
     if schools.count() == 0:
-        return HttpResponseRedirect(reverse('teachers:schoolSearch'))
+        return HttpResponseRedirect(reverse('teacher:schoolSearch'))
     students = Student.objects.filter(school_code = school.student_code)
     context = {
         'school': school,
