@@ -258,5 +258,7 @@ def get_google_scopes(request):
         except:
             return HttpResponse('An unknown error occurred', status=500)
 
-    
-        
+def settings(request):
+    if not student_check(request):
+        return HttpResponseRedirect(reverse('authentication:index'))
+    return render(request, 'student/settings.html')

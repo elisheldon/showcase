@@ -66,9 +66,12 @@ def register(request):
             password2 = form.cleaned_data.get('password2')
             user_type = form.cleaned_data.get('user_type')
             first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
             age = form.cleaned_data.get('age')
+            school_code = form.cleaned_data.get('school_code')
             user = get_user_model().objects.create_user(username, email, password1)
             user.first_name = first_name
+            user.last_name = last_name # this will be last initial if student is under 13 because of clean method on form
             if user_type == 'student':
                 group = Group.objects.get(name='students')
                 user.groups.add(group)
@@ -83,7 +86,13 @@ def register(request):
                 staff = Staff(user = user)
                 staff.save()
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return HttpResponseRedirect(reverse('teacher:index'))
+                if school_code:
+                    school = School.objects.get(code = school_code)
+                    school.staff.add(staff)
+                    school.save()
+                    return HttpResponseRedirect(reverse('teacher:index'))
+                else:
+                    return HttpResponseRedirect(reverse('teacher:schoolSearch'))
     else:
         form = RegistrationForm(prefix='register')
     return render(request, 'authentication/register.html', {'form': form})
@@ -100,13 +109,14 @@ def social(request):
         if form.is_valid():
             user_type = form.cleaned_data.get('user_type')
             age = form.cleaned_data.get('age')
+            school_code = form.cleaned_data.get('school_coed')
             user = request.user
             if user_type == 'student':
                 group = Group.objects.get(name='students')
                 user.groups.add(group)
                 if age < 13:
                     user.email = sha1(user.email.encode()).hexdigest()
-                    user.last_name = None
+                    user.last_name = user.last_name[0].upper()
                 user.save()
                 try:
                     student = Student.objects.create(user = user, age = age, google_credentials = json.dumps({'token': request.user.social_auth.get(provider='google-oauth2').extra_data['access_token']}))
@@ -117,14 +127,17 @@ def social(request):
             elif user_type == 'staff':
                 group = Group.objects.get(name='staff')
                 user.groups.add(group)
-                if age < 13:
-                    user.email = sha1(user.email.encode()).hexdigest()
-                    user.last_name = None
                 user.save()
                 staff = Staff(user = user)
                 staff.save()
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return HttpResponseRedirect(reverse('teacher:index'))
+                if school_code:
+                    school = School.objects.get(code = school_code)
+                    school.staff.add(staff)
+                    school.save()
+                    return HttpResponseRedirect(reverse('teacher:index'))
+                else:
+                    return HttpResponseRedirect(reverse('teacher:schoolSearch'))
     else:
         form = SocialForm()
     return render(request, 'authentication/social.html', {'form': form})
@@ -133,3 +146,11 @@ def azure(request):
     response = HttpResponse(content='{"associatedApplications":[{"applicationId":"18c3c49f-bef0-495b-81bd-e0390698acf8"}]}', content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="microsoft-identity-association.json"'
     return response
+
+def settings(request):
+    if request.user.groups.filter(name='students').exists():
+        return HttpResponseRedirect(reverse('student:settings'))
+    elif request.user.groups.filter(name='staff').exists():
+        return HttpResponseRedirect(reverse('teacher:settings'))
+    else:
+        return HttpResponseRedirect(reverse('authentication:index'))

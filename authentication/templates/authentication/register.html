@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src='{% static "authentication/register.js" %}'></script>
+{% endblock %}
+
+{% block title %}{% trans 'Register for Showcase' %}{% endblock %}
+
+{% block body %}
+<div class='text-center' style='width:100%'>
+  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;'></a>
+  <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;'></a>
+  <br><br>
+  <h3>or</h3>
+</div>
+  <form action='{% url "authentication:register" %}' method='post' autocomplete='off'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class='text-center'></div>
+      <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

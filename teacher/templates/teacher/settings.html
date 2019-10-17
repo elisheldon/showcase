@@ -1,0 +1,23 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block scripts %}
+  {{ block.super }}
+{% endblock %}
+
+{% block title %}{% trans 'Settings' %}{% endblock %}
+
+{% block body %}
+  <form id='settings_form' action='{% url "teacher:settings" %}' method='post'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    {% if school %}
+      <small class='form-text text-muted'>Currently: {{ school.name }}</small>
+      <br>
+    {% endif %}
+    <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans 'Add Your School' %}{% endblock %}
+
+{% block body %}
+<h2>{% trans 'Add Your School' %}</h2>
+  {% trans 'Enter the below information for your school to add it to Showcase.' %}
+  <form id='add_school_form' action='{% url "teacher:addSchool" %}' method='post'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    {% if schools %}
+      <script>window.location.hash = '#id_zip'</script>
+      {% trans 'Just checking - you\'re not looking for one of the schools below, are you? If so, click on the name of that school to continue.' %}
+      <br><br>
+      <ul>
+      {% for school in schools %}
+        <li><a href='{% url "teacher:schoolDetails" school.id %}'><b>{{ school.name }}</b> - {{ school.address }}, {{ school.city }}, {{ school.state }} {{ school.zip }}</a></li>
+      {% endfor %}
+      </ul>
+      {% trans 'If none of these match your school, click Submit again to add your school to Showcase.' %}
+      <br><br>
+    {% endif %}
+    <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Submit' %}</button>
+  </form>
+  <br>
+{% endblock %}

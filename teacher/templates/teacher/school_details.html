@@ -1,0 +1,29 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ school.name }}{% endblock %}
+
+{% block body %}
+<h2>{{ school.name }}</h2>
+  {% if school.code %}
+    {% blocktrans %}
+      Your school has already been registered with Showcase. Your school staff code is not displayed here in order to protect your students' data. To join your school, you need to get your school staff code from {{ owner_name }} at <a href='mailto:{{ owner_email }}'>{{ owner_email }}</a>. Once you have your school staff code, you can set it in your Settings by clicking on your name above.
+      <br>
+      <br>
+      If you believe the contact listed above is incorrect or cannot be reached, please contact support at <a href='mailto:support@showcaseedu.com'>support@showcaseedu.com.
+    {% endblocktrans %}
+  {% else %}
+    {% trans 'You are almost done registering your school with Showcase. Your school needs a <b>school staff code</b> that other staff members will use to join your school. To protect your students\' data, this code should only be shared with staff members of your school.' %}
+    <br><br>
+    {% blocktrans with url=request.get_full_path name=request.user.first_name email=request.user.email %}By creating a school staff code below, <b>you</b> will be registered as the primary contact for your school. If others come to this page, they will see your name ({{ name }}) and email address ({{ email }}) so they can contact you for the school staff code. If you think there is a better contact for your school, please have that person create an account with Showcase and then visit <a href='{{ url }}'>this same page</a>.{% endblocktrans %}
+    <br><br>
+    <form id='create_code_form' action='{% url "teacher:createSchoolCode" %}' method='post'>
+      {% csrf_token %}
+      <input type='hidden' name='id' value='{{ school.id }}'>
+      <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Create school code' %}</button>
+    </form>
+  {% endif %}
+{% endblock %}

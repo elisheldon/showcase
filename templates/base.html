@@ -43,7 +43,8 @@
               <span class='nav-username text-white'>{{ request.user.first_name }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href='{% url "authentication:logoutUser" %}''>Log out</a>
+                <a class='dropdown-item' href='{% url "authentication:settings" %}'>Settings</a>
+                <a class="dropdown-item" href='{% url "authentication:logoutUser" %}'>Log out</a>
             </div>
           </div>
         {% endif %}

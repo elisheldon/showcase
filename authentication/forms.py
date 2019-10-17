@@ -13,8 +13,9 @@ class RegistrationForm(forms.Form):
     username = forms.CharField(label = _('Username'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
     user_type_choices = (('student',_('Student')),('staff',_('Teacher or other staff member')))
     user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
+    age = forms.IntegerField(label = _('Age*'), min_value=1, max_value=100, required=False)
     first_name = forms.CharField(label = _('First name'))
-    age = forms.IntegerField(label = _('Age'), min_value=1, max_value=100)
+    last_name = forms.CharField(label= _('Last name'))
     email = forms.EmailField(label = _('Email address'))
     school_code = forms.CharField(label = _('School code (optional)'), required=False, help_text=_('Don\'t worry if you don\'t have one! You can add or create one later.'))
     password1 = forms.CharField(label = _('Password'), widget = forms.PasswordInput)
@@ -31,17 +32,32 @@ class RegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        email_hash = sha1(email.encode()).hexdigest()
-        age = self.cleaned_data.get('age')
-        try:
-            get_user_model().objects.get(email = email)
-            get_user_model().objects.get(email = email_hash)
-        except get_user_model().DoesNotExist:
-            if age >= 13:
-                return email
+        user_type = self.cleaned_data.get('user_type')
+        if user_type == 'student':
+            email_hash = sha1(email.encode()).hexdigest()
+            age = self.cleaned_data.get('age')
+            if get_user_model().objects.filter(email = email).exists() or get_user_model().objects.filter(email = email_hash).exists():
+                raise forms.ValidationError(_('This email address is already associated with an account.'))
             else:
-                return email_hash
-        raise forms.ValidationError(_('This email address is already associated with an account.'))
+                if age >= 13:
+                    return email
+                else:
+                    return email_hash
+        else:
+            return email
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        user_type = self.cleaned_data.get('user_type')
+        if user_type == 'student':
+            last_initial = last_name[0].upper()
+            age = self.cleaned_data.get('age')
+            if age >= 13:
+                return last_name
+            else:
+                return last_initial
+        else:
+            return last_name
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
@@ -56,6 +72,25 @@ class RegistrationForm(forms.Form):
                 _('Passwords do not match.'),
             )
         return password2
+    
+    def clean_code(self):
+        code = self.cleaned_data.get('code')
+        user_type = self.cleaned_data.get('user_type')
+        if user_type == 'student':
+            try:
+                school = School.objects.get(student_code = code)
+            except:
+                raise forms.ValidationError(
+                    _('That school code is not valid, please try another.'),
+                )
+        else:
+            try:
+                school = School.objects.get(code = code)
+            except:
+                raise forms.ValidationError(
+                    _('That school code is not valid, please try another.'),
+                )
+        return code
 
 class PasswordResetFormCoppa(PasswordResetForm):
         def get_users(self, email):
@@ -77,3 +112,22 @@ class SocialForm(forms.Form):
     age = forms.IntegerField(label = _('Age'), min_value=1, max_value=100)
     school_code = forms.CharField(label = _('School code (optional)'), required=False, help_text=_('Don\'t worry if you don\'t have one! You can add or create one later.'))
     terms = forms.BooleanField(label = _('I agree to the <a href="https://showcaseedu.com/terms">Terms of Service</a> and <a href="https://showcaseedu.com/privacy">Privacy Policy</a>. If I am under 13 years of age, I confirm that I have my parent or legal guardian\'s permission to use Showcase.'))
+
+    def clean_code(self):
+        code = self.cleaned_data.get('code')
+        user_type = self.cleaned_data.get('user_type')
+        if user_type == 'student':
+            try:
+                school = School.objects.get(student_code = code)
+            except:
+                raise forms.ValidationError(
+                    _('That school code is not valid, please try another.'),
+                )
+        else:
+            try:
+                school = School.objects.get(code = code)
+            except:
+                raise forms.ValidationError(
+                    _('That school code is not valid, please try another.'),
+                )
+        return code

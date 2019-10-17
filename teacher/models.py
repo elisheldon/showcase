@@ -7,6 +7,8 @@ class Staff(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete = models.CASCADE,
     )
+    def __str__(self):
+        return self.user.username
 
 class School(models.Model):
     name = models.CharField(
@@ -43,17 +45,24 @@ class School(models.Model):
         null = True,
     )
     code = models.CharField(
-        max_length = 8,
+        max_length = 6,
+        blank = True,
+        null = True,
+    )
+    student_code = models.CharField(
+        max_length = 6,
         blank = True,
         null = True,
     )
     owners = models.ManyToManyField(
         Staff,
         related_name = 'schools_owned',
+        blank = True,
     )
     staff = models.ManyToManyField(
         Staff,
         related_name = 'schools_staffed',
+        blank = True,
     )
-    
-
+    def __str__(self):
+        return self.name + ' (' + self.city + ')'

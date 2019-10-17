@@ -4,7 +4,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = os.environ['DJANGO_DEBUG']
 
-ALLOWED_HOSTS = ['127.0.0.1', 'showcase-env.pb9jd7myyh.us-west-2.elasticbeanstalk.com', 'www.showcaseedu.com', 'showcaseedu.com', '192.168.1.15']
+ALLOWED_HOSTS = ['127.0.0.1', 'showcase-env.pb9jd7myyh.us-west-2.elasticbeanstalk.com', 'www.showcaseedu.com', 'showcaseedu.com', '192.168.1.15', 'localhost']
 
 DATABASES = {
     'default': {

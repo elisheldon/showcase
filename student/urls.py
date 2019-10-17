@@ -11,5 +11,6 @@ urlpatterns = [
     path('public', views.public, name='public'),
     path('view/<str:username>', views.view, name='view'),
     path('get_google_scopes', views.get_google_scopes, name='get_google_scopes'),
+    path('settings', views.settings, name='settings'),
 ]
 
