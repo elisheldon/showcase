@@ -109,7 +109,7 @@ class PasswordResetFormCoppa(PasswordResetForm):
 class SocialForm(forms.Form):
     user_type_choices = (('student',_('Student')),('staff',_('Teacher or other staff member')))
     user_type = forms.ChoiceField(label = _('I am a...'), choices = user_type_choices)
-    age = forms.IntegerField(label = _('Age'), min_value=1, max_value=100)
+    age = forms.IntegerField(label = _('Age*'), min_value=1, max_value=100, required=False)
     school_code = forms.CharField(label = _('School code (optional)'), required=False, help_text=_('Don\'t worry if you don\'t have one! You can add or create one later.'))
     terms = forms.BooleanField(label = _('I agree to the <a href="https://showcaseedu.com/terms">Terms of Service</a> and <a href="https://showcaseedu.com/privacy">Privacy Policy</a>. If I am under 13 years of age, I confirm that I have my parent or legal guardian\'s permission to use Showcase.'))
 
