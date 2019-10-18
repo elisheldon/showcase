@@ -57,7 +57,7 @@ class Item(models.Model):
     )
     sub_item_type = models.ForeignKey(
         ContentType,
-        limit_choices_to = models.Q(app_label = 'student', model = 'link') | models.Q(app_label = 'student', model = 'gallery'),
+        limit_choices_to = models.Q(app_label = 'student', model = 'link') | models.Q(app_label = 'student', model = 'gallery') | models.Q(app_label = 'student', model = 'document'),
         on_delete = models.CASCADE,
     )
     sub_item_id = models.PositiveIntegerField()
