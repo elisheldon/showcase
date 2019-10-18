@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from hashlib import sha1
 
+from teacher.models import School
+
 class LoginForm(forms.Form):
     username = forms.CharField(label = _('Username'), widget=forms.TextInput(attrs={'autofocus':'autofocus'}))
     password = forms.CharField(label = _('Password'), widget = forms.PasswordInput)
@@ -73,8 +75,8 @@ class RegistrationForm(forms.Form):
             )
         return password2
     
-    def clean_code(self):
-        code = self.cleaned_data.get('code')
+    def clean_school_code(self):
+        code = self.cleaned_data.get('school_code')
         user_type = self.cleaned_data.get('user_type')
         if user_type == 'student':
             try:
@@ -113,8 +115,8 @@ class SocialForm(forms.Form):
     school_code = forms.CharField(label = _('School code (optional)'), required=False, help_text=_('Don\'t worry if you don\'t have one! You can add or create one later.'))
     terms = forms.BooleanField(label = _('I agree to the <a href="https://showcaseedu.com/terms">Terms of Service</a> and <a href="https://showcaseedu.com/privacy">Privacy Policy</a>. If I am under 13 years of age, I confirm that I have my parent or legal guardian\'s permission to use Showcase.'))
 
-    def clean_code(self):
-        code = self.cleaned_data.get('code')
+    def clean_school_code(self):
+        code = self.cleaned_data.get('school_code')
         user_type = self.cleaned_data.get('user_type')
         if user_type == 'student':
             try:

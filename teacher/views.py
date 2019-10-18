@@ -107,15 +107,20 @@ def schoolDetails(request, id):
         school = School.objects.get(id=id)
     except:
         raise Http404('School does not exist')
+    staff = Staff.objects.get(user = request.user)
+    schools_owned = School.objects.filter(owners = staff)
+    already_owned = schools_owned.count() > 0
     try:
         context = {
             'school': school,
             'owner_name': school.owners.first().user.first_name + ' ' + school.owners.first().user.last_name,
             'owner_email': school.owners.first().user.email,
+            'already_owned': already_owned,
         }
     except:
         context = {
             'school': school,
+            'already_owned': already_owned,
         }
     return render(request, 'teacher/school_details.html', context)
 
@@ -156,6 +161,7 @@ def createSchoolCode(request):
         }
         return render(request, 'teacher/school_code.html', context)
     else:
+        messages
         return HttpResponse('A single account cannot create codes for multiple schools.')
 
 @staff_member_required

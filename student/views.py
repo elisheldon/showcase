@@ -74,8 +74,10 @@ def add(request):
             if sub_item_type == 'gallery':
                 galleryType = ContentType.objects.get_for_model(Gallery)
                 galleryCount = Item.objects.filter(student = student, sub_item_type = galleryType).count()
-                if galleryCount >= 20:
-                    messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 20 galleries per account. Please remove one or more galleries from your Showcase, then try again.'))
+                photoType = ContentType.objects.get_for_model(Photo)
+                photoCount = Item.objects.filter(student = student, sub_item_type = photoType).count()
+                if galleryCount >= 10 or photoCount >= 30:
+                    messages.add_message(request, messages.ERROR, _('Showcase currently has a limit of 10 galleries and 30 photos per account. Please remove one or more galleries from your Showcase, then try again.'))
                     context = {
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,

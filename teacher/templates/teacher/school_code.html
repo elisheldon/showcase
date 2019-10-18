@@ -11,4 +11,6 @@
   {% blocktrans with code=school.code %} Your school staff code is <b>{{ code }}</b>. Other staff members will use this code to join your school. To protect your students' data, this code should only be shared with staff members of your school.{% endblocktrans %}
   <br><br>
   {% blocktrans with student_code=school.student_code %}<b>Do not share the staff code with students.</b> Students should use your school's student code, <b>{{student_code}}</b>, to join your school.{% endblocktrans %}
+  <br><br>
+  <a href='{% url "teacher:index" %}' class='btn btn-primary'>Continue</a>
 {% endblock %}

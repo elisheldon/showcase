@@ -32,25 +32,32 @@ def index(request):
     return render(request, 'authentication/index.html', context)
 
 def loginUser(request):
-    form = LoginForm(request.POST, prefix='login')
-    if form.is_valid():
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            if request.user.groups.filter(name='students').exists():
-                return HttpResponseRedirect(reverse('student:portfolio'))
-            elif request.user.groups.filter(name='staff').exists():
-                return HttpResponseRedirect(reverse('teachers:index'))
+    if request.method == 'POST':
+        form = LoginForm(request.POST, prefix='login')
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                if request.user.groups.filter(name='students').exists():
+                    return HttpResponseRedirect(reverse('student:portfolio'))
+                elif request.user.groups.filter(name='staff').exists():
+                    return HttpResponseRedirect(reverse('teachers:index'))
+                else:
+                    return HttpResponse('You are not a student or a staff member, something is wrong!')
             else:
-                return HttpResponse('You are not a student or a staff member.')
+                messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))
+                return HttpResponseRedirect(reverse('authentication:loginUser'))
         else:
-            messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))
-            return HttpResponseRedirect(reverse('authentication:index'))
+            messages.add_message(request, messages.ERROR, _('There was an error logging you in, please try again.'))
+            return HttpResponseRedirect(reverse('authentication:loginUser'))
     else:
-        messages.add_message(request, messages.ERROR, _('There was an error logging you in, please try again.'))
-        return HttpResponseRedirect(reverse('authentication:index'))
+        form = LoginForm()
+        context = {
+            'loginForm': form,
+        }
+        return render(request, 'authentication/login.html', context)
 
 def logoutUser(request):
     logout(request)
