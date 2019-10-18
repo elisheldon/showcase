@@ -7,6 +7,7 @@
 {% block title %}{% trans 'Log in to Showcase' %}{% endblock %}
 
 {% block body %}
+  <h2>Log in to Showcase</h2>
   <div class='text-center' style='width:100%'>
       <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;'></a>
       <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;'></a>

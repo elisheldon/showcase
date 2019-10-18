@@ -77,22 +77,23 @@ class RegistrationForm(forms.Form):
     
     def clean_school_code(self):
         code = self.cleaned_data.get('school_code')
-        user_type = self.cleaned_data.get('user_type')
-        if user_type == 'student':
-            try:
-                school = School.objects.get(student_code = code)
-            except:
-                raise forms.ValidationError(
-                    _('That school code is not valid, please try another.'),
-                )
-        else:
-            try:
-                school = School.objects.get(code = code)
-            except:
-                raise forms.ValidationError(
-                    _('That school code is not valid, please try another.'),
-                )
-        return code
+        if code:
+            user_type = self.cleaned_data.get('user_type')
+            if user_type == 'student':
+                try:
+                    school = School.objects.get(student_code = code)
+                except:
+                    raise forms.ValidationError(
+                        _('That school code is not valid, please try another.'),
+                    )
+            else:
+                try:
+                    school = School.objects.get(code = code)
+                except:
+                    raise forms.ValidationError(
+                        _('That school code is not valid, please try another.'),
+                    )
+            return code
 
 class PasswordResetFormCoppa(PasswordResetForm):
         def get_users(self, email):
@@ -117,19 +118,20 @@ class SocialForm(forms.Form):
 
     def clean_school_code(self):
         code = self.cleaned_data.get('school_code')
-        user_type = self.cleaned_data.get('user_type')
-        if user_type == 'student':
-            try:
-                school = School.objects.get(student_code = code)
-            except:
-                raise forms.ValidationError(
-                    _('That school code is not valid, please try another.'),
-                )
-        else:
-            try:
-                school = School.objects.get(code = code)
-            except:
-                raise forms.ValidationError(
-                    _('That school code is not valid, please try another.'),
-                )
+        if code:
+            user_type = self.cleaned_data.get('user_type')
+            if user_type == 'student':
+                try:
+                    school = School.objects.get(student_code = code)
+                except:
+                    raise forms.ValidationError(
+                        _('That school code is not valid, please try another.'),
+                    )
+            else:
+                try:
+                    school = School.objects.get(code = code)
+                except:
+                    raise forms.ValidationError(
+                        _('That school code is not valid, please try another.'),
+                    )
         return code

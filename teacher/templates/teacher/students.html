@@ -2,11 +2,6 @@
 
 {% load crispy_forms_tags %}
 {% load i18n %}
-{% load static %}
-
-{% block scripts %}
-  {{ block.super }}
-{% endblock %}
 
 {% block title %}{% trans 'My Students' %}{% endblock %}
 
@@ -16,17 +11,17 @@
     <p>{% blocktrans with code=school.student_code %}Click on a student to view their Showcase portfolio. Students can join your school by using <b>{{ code }}</b> as the school code, which they can enter this when they register, or by clicking on their name and going to Settings after registration.{% endblocktrans %}</p>
     <input class="form-control" id="studentSearch" type="text" placeholder="Search...">
     <br>
-    <ul>
-    {% for student in students %}
-      <li><a href='https://showcaseedu.com/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a></li>
+    <div class='list-group'>
+    {% for student in students|dictsort:'user.first_name' %}
+      <a class='list-group-item list-group-item-action' href='https://showcaseedu.com/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a>
     {% endfor %}
-    </ul>
+    </div>
 
     <script>
       $(document).ready(function(){
         $("#studentSearch").on("keyup", function() {
           const value = $(this).val().toLowerCase()
-          $("li").filter(function() {
+          $(".list-group-item").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
           })
         })

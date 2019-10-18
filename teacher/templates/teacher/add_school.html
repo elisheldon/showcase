@@ -16,11 +16,12 @@
       <script>window.location.hash = '#id_zip'</script>
       {% trans 'Just checking - you\'re not looking for one of the schools below, are you? If so, click on the name of that school to continue.' %}
       <br><br>
-      <ul>
+      <div class='list-group'>
       {% for school in schools %}
-        <li><a href='{% url "teacher:schoolDetails" school.id %}'><b>{{ school.name }}</b> - {{ school.address }}, {{ school.city }}, {{ school.state }} {{ school.zip }}</a></li>
+        <a class='list-group-item list-group-item-action' href='{% url "teacher:schoolDetails" school.id %}'><b>{{ school.name }}</b> - {{ school.address }}, {{ school.city }}, {{ school.state }} {{ school.zip }} {{ school.country }}</a>
       {% endfor %}
-      </ul>
+      </div>
+      <br>
       {% trans 'If none of these match your school, click Submit again to add your school to Showcase.' %}
       <br><br>
     {% endif %}
