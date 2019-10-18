@@ -105,7 +105,7 @@ def terms(request):
 
 def social(request):
     if request.method == 'POST':
-        form = SocialForm(request.POST)
+        form = SocialForm(request.POST, prefix='register')
         if form.is_valid():
             user_type = form.cleaned_data.get('user_type')
             age = form.cleaned_data.get('age')
@@ -139,7 +139,7 @@ def social(request):
                 else:
                     return HttpResponseRedirect(reverse('teacher:schoolSearch'))
     else:
-        form = SocialForm()
+        form = SocialForm(prefix='register')
     return render(request, 'authentication/social.html', {'form': form})
 
 def azure(request):
