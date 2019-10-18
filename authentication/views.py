@@ -119,9 +119,9 @@ def social(request):
                     user.last_name = user.last_name[0].upper()
                 user.save()
                 try:
-                    student = Student.objects.create(user = user, age = age, code = school_code, google_credentials = json.dumps({'token': request.user.social_auth.get(provider='google-oauth2').extra_data['access_token']}))
+                    student = Student.objects.create(user = user, age = age, school_code = school_code, google_credentials = json.dumps({'token': request.user.social_auth.get(provider='google-oauth2').extra_data['access_token']}))
                 except:
-                    student = Student.objects.create(user = user, age = age, code = school_code, azure_credentials = json.dumps({'token': request.user.social_auth.get(provider='microsoft-graph').extra_data['access_token']}))
+                    student = Student.objects.create(user = user, age = age, school_code = school_code, azure_credentials = json.dumps({'token': request.user.social_auth.get(provider='microsoft-graph').extra_data['access_token']}))
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('student:portfolio'))
             elif user_type == 'staff':
