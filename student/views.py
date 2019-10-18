@@ -191,12 +191,28 @@ def remove(request):
     return HttpResponse(status=204)
 
 def gallery(request, item_id):
-    if not student_check(request):
+    item = Item.objects.get(pk = item_id)
+    student = item.student
+    public_view = False
+    if not request.user.is_authenticated: # if the user isn't logged in
+        public_view = student.pf_public
+    teacher_view = False
+    if student.school_code:
+        school = School.objects.get(student_code = student.school_code)
+        if request.user.groups.filter(name='staff').exists(): #if the viewing user is a staff member of any school
+            staff = Staff.objects.get(user = request.user)
+            if staff in school.staff.all():
+                teacher_view = True
+    self_view = False
+    try:
+        current_student = Student.objects.get(user = request.user)
+        if item.student == current_student:
+            self_view = True
+    except:
+        None    
+    if not public_view and not self_view and not teacher_view:
+        messages.add_message(request, messages.ERROR, _('That gallery does not exist or the student has set their Showcase to be private.'))
         return HttpResponseRedirect(reverse('authentication:index'))
-    student = Student.objects.get(user = request.user)
-    item = Item.objects.get(pk = item_id, student = student)
-    if not item:
-        raise PermissionDenied
     gallery = Gallery.objects.get(item = item)
     photos = Photo.objects.filter(parent_gallery = gallery)
     context = {
