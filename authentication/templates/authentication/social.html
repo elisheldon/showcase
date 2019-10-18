@@ -3,6 +3,11 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
+{% block scripts %}
+  {{ block.super }}
+  <script src='{% static "authentication/register.js" %}'></script>
+{% endblock %}
+
 {% block title %}{% trans 'Complete your registration' %}{% endblock %}
 
 {% block body %}
