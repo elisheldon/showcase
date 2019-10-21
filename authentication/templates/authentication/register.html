@@ -19,11 +19,11 @@
   <br><br>
   <h3>or</h3>
 </div>
-  <form action='{% url "authentication:register" %}' method='post' autocomplete='off'>
+  <form action='{% url "authentication:register" %}' method='post' autocomplete='off' onsubmit='submit.disabled = true; return true;'>
     {% csrf_token %}
     {{ form|crispy }}
     <div class='text-center'></div>
-      <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
+      <button type='submit' name='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
     </div>
   </form>
 </div>

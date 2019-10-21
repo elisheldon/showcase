@@ -45,11 +45,11 @@
   <h2>{% trans 'Add an Item' %}</h2>
   <div class='row'>
     <div class='col-lg-6 col-sm-12'>
-      <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off' enctype='multipart/form-data'>
+      <form id='add_form' action='{% url "student:add" %}' method='post' autocomplete='off' enctype='multipart/form-data' onsubmit='submit.disabled = true; return true;'>
         {% csrf_token %}
         {{ form|crispy }}
         <button type='button' id='clear_form_btn' class='btn btn-primary'>{% trans 'Clear' %}</button>
-        <button type='submit' id='submit_form_btn' disabled class='btn btn-primary'>{% trans 'Submit' %}</button>
+        <button type='submit' id='submit_form_btn' name='submit' disabled class='btn btn-primary'>{% trans 'Submit' %}</button>
         <br><br>
       </form>
     </div>

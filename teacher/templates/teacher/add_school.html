@@ -9,7 +9,7 @@
 {% block body %}
 <h2>{% trans 'Add Your School' %}</h2>
   {% trans 'Enter the below information for your school to add it to Showcase.' %}
-  <form id='add_school_form' action='{% url "teacher:addSchool" %}' method='post'>
+  <form id='add_school_form' action='{% url "teacher:addSchool" %}' method='post' onsubmit='submit.disabled = true; return true;' autocomplete='false'>
     {% csrf_token %}
     {{ form|crispy }}
     {% if schools %}
@@ -25,7 +25,7 @@
       {% trans 'If none of these match your school, click Submit again to add your school to Showcase.' %}
       <br><br>
     {% endif %}
-    <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Submit' %}</button>
+    <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Submit' %}</button>
   </form>
   <br>
 {% endblock %}

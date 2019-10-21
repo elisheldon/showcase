@@ -7,7 +7,7 @@
 {% block title %}{% trans 'Settings' %}{% endblock %}
 
 {% block body %}
-  <form id='settings_form' action='{% url "teacher:settings" %}' method='post'>
+  <form id='settings_form' action='{% url "teacher:settings" %}' method='post' onsubmit='submit.disabled = true; return true;'>
     {% csrf_token %}
     {{ form|crispy }}
     {% if school %}
@@ -15,6 +15,6 @@
       <small class='form-text text-muted'>{% blocktrans with name=school.name%}Currently: {{ name }}. Find a different school <a href='{{ url }}'>here</a>.{% endblocktrans %}</small>
       <br>
     {% endif %}
-    <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+    <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
   </form>
 {% endblock %}

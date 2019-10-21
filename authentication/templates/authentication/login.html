@@ -14,11 +14,11 @@
       <br><br>
       <h3>or</h3>
     </div>
-    <form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off'>
+    <form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off' onsubmit='submit.disabled = true; return true;'>
       {% csrf_token %}
       {{ loginForm|crispy }}
       <div class='text-center'>
-        <button type='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
+        <button type='submit' name='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
       </div>
     </form>
     <br>

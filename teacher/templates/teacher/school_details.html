@@ -20,10 +20,10 @@
     <br><br>
     {% blocktrans with url=request.get_full_path name=request.user.first_name email=request.user.email %}By creating a school staff code below, <b>you</b> will be registered as the primary contact for your school. If others come to this page, they will see your name ({{ name }}) and email address ({{ email }}) so they can contact you for the school staff code. If you think there is a better contact for your school, please have that person create an account with Showcase and then visit <a href='{{ url }}'>this same page</a>.{% endblocktrans %}
     <br><br>
-    <form id='create_code_form' action='{% url "teacher:createSchoolCode" %}' method='post'>
+    <form id='create_code_form' action='{% url "teacher:createSchoolCode" %}' method='post' onsubmit='submit.disabled = true; return true;'>
       {% csrf_token %}
       <input type='hidden' name='id' value='{{ school.id }}'>
-      <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Create school code' %}</button>
+      <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Create school code' %}</button>
     </form>
   {% else %}
     {% trans 'Showcase accounts are currently limited to serving as the primary point of contact for a single school. This school needs a <b>school staff code</b> that you and other staff members will use to join your school, but another staff member will need to navigate to this page to create it before you can join. That staff member will then serve as the primary point of contact for your school.' %}

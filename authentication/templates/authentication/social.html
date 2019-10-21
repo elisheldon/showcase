@@ -14,9 +14,9 @@
 {% block body %}
 <h2>{% trans 'Complete your registration' %}</h2>
 <p>{% trans 'We need a little more information to get you started.' %}
-<form action='{% url "authentication:social" %}' method='post' autocomplete='off'>
+<form action='{% url "authentication:social" %}' method='post' autocomplete='off' onsubmit='submit.disabled = true; return true;'>
   {% csrf_token %}
   {{ form|crispy }}
-  <button type='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
+  <button type='submit' name='submit' class='btn btn-primary'>{% trans 'Submit' %}</button>
 </form>
 {% endblock %}

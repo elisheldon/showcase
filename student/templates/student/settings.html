@@ -11,13 +11,13 @@
 {% block title %}{% trans 'Settings' %}{% endblock %}
 
 {% block body %}
-  <form id='settings_form' action='{% url "student:settings" %}' method='post'>
+  <form id='settings_form' action='{% url "student:settings" %}' method='post' onsubmit='submit.disabled = true; return true;'>
     {% csrf_token %}
     {{ form|crispy }}
     {% if school %}
       <small class='form-text text-muted'>{% trans 'Currently: ' %}{{ school.name }}</small>
       <br>
     {% endif %}
-    <button type='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+    <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
   </form>
 {% endblock %}
