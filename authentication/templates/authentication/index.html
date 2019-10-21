@@ -89,7 +89,7 @@
       </div>
     {% endblocktrans %}
       <div class='col-12 col-md-5 text-center'>
-        <a href='https://showcaseedu.com/student/view/zaharah'><img src='{% static "authentication/zahara.png" %}' style='width: 100%; height: auto;'></a>
+        <a href='{{ request.scheme }}://{{ request.get_host }}{{ request.path }}student/view/zaharah'><img src='{% static "authentication/zahara.png" %}' style='width: 100%; height: auto;'></a>
       </div>
   </div>
 <script>

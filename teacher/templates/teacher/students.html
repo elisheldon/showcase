@@ -13,7 +13,7 @@
     <br>
     <div class='list-group'>
     {% for student in students|dictsort:'user.first_name' %}
-      <a class='list-group-item list-group-item-action' href='https://showcaseedu.com/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a>
+      <a class='list-group-item list-group-item-action' href='{{ request.scheme }}://{{ request.get_host }}/student/view/{{ student.user.username }}' target="_blank">{{ student.user.first_name }} {{ student.user.last_name }} ({{ student.user.username }})</a>
     {% endfor %}
     </div>
 
