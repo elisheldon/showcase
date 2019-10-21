@@ -13,5 +13,6 @@ urlpatterns = [
     path('get_google_scopes', views.get_google_scopes, name='get_google_scopes'),
     path('settings', views.settings, name='settings'),
     path('pin', views.pin, name='pin'),
+    path('edit', views.edit, name='edit'),
 ]
 

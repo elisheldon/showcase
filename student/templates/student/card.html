@@ -34,6 +34,9 @@
       <a href='#' class='removeLink' data-toggle='modal' data-target='#removeModal' data-item-title='{{ item.title }}' data-item-id='{{ item.id }}'>
         <i class='fas fa-trash-alt text-primary'></i>
       </a>
+      <a href='#' class='editItem' data-toggle='modal' data-target='#editModal' data-item-title='{{ item.title }}' data-item-description='{{ item.description }}' data-item-id='{{ item.id }}'>
+        <i class='fas fa-pencil-alt text-primary'></i>
+      </a>
       <a href='#' class='pinCard'>
         {% if item.pinned %}
           <i class='fas fa-star' data-item-id='{{ item.id }}'></i>
@@ -61,6 +64,32 @@
       <div class='modal-footer'>
         <button type='button' class='btn btn-secondary' data-dismiss='modal'>{% trans 'Cancel' %}</button>
         <button type='button' class='btn btn-primary' id='removeButton'>{% trans 'Remove' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class='modal fade' id='editModal' tabindex='-1' role='dialog' aria-labelledby='editModalLabel' aria-hidden='true'>
+  <div class='modal-dialog modal-dialog-centered' role='document'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h5 class='modal-title' id='editModalLabel'>{% trans 'Edit ' %}<span id='edit-modal-title-item'></span></h5>
+        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+          <span aria-hidden='true'>&times;</span>
+        </button>
+      </div>
+      <div class='modal-body'>
+        <div class="form-group">
+          <label for='editItemTitle'>{% trans 'Title' %}</label>
+          <input type='text' aria-label='Title' id='editItemTitle' class='form-control'>
+          <label for='editItemDescription'>{% trans 'Description' %}</label>
+          <textarea rows='3' aria-label='Description' id='editItemDescription' class='form-control'></textarea>
+        </div>
+      </div>
+      <div class='modal-footer'>
+        <button type='button' class='btn btn-secondary' data-dismiss='modal'>{% trans 'Cancel' %}</button>
+        <button type='button' class='btn btn-primary' id='saveButton'>{% trans 'Save' %}</button>
       </div>
     </div>
   </div>

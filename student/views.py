@@ -188,7 +188,7 @@ def remove(request):
     except:
         raise PermissionDenied
     item.sub_item.delete()
-    return HttpResponse(status=204)
+    return HttpResponse(status=202)
 
 def gallery(request, item_id):
     item = Item.objects.get(pk = item_id)
@@ -333,4 +333,26 @@ def pin(request):
         raise PermissionDenied
     item.pinned = not item.pinned
     item.save()
-    return HttpResponse(status=204)
+    return HttpResponse(status=202)
+
+def edit(request):
+    if not student_check(request):
+        return HttpResponseRedirect(reverse('authentication:index'))
+    item_id = json.loads(request.body)['item_id']
+    print(item_id)
+    item_title = json.loads(request.body)['item_title']
+    item_description = json.loads(request.body)['item_description']
+    student = Student.objects.get(user = request.user)
+    try:
+        item = Item.objects.get(pk = item_id, student = student)
+    except:
+        raise PermissionDenied
+    print(item_title)
+    print(item.title)
+    if item_title != item.title or item_description != item.description:
+        item.title = item_title
+        item.description = item_description
+        item.save()
+        return HttpResponse(status=202)
+    else:
+        return HttpResponse(status=400)

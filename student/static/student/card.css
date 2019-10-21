@@ -19,7 +19,7 @@
   padding-top: 0;
 }
 
-.pinCard, .removeLink{
+.editItem, .pinCard, .removeLink{
   text-decoration: none !important;
   float: right;
   margin-left: 5px;
