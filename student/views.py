@@ -293,19 +293,31 @@ def settings(request):
         form = SettingsForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data.get('code')
-            student.school_code = code
-            student.save()
-            if code:
+            pf_public = form.cleaned_data.get('pf_public')
+            if code and code != student.school_code:
+                student.school_code = code
                 school = School.objects.get(student_code = code)
                 messages.add_message(request, messages.SUCCESS, _('Successfully joined ') + school.name)
+            elif code != student.school_code: # if the student removed their school code
+                student.school_code = ''
+                messages.add_message(request, messages.SUCCESS, _('Your account is no longer linked with a school.'))
+            if pf_public != str(student.pf_public):
+                student.pf_public = pf_public
+                if pf_public == 'True':
+                    messages.add_message(request, messages.SUCCESS, _('Your Showcase is now public'))
+                else:
+                    messages.add_message(request, messages.SUCCESS, _('Your Showcase is now private'))
+            student.save()
     else:
-        form = SettingsForm(initial={'code': student.school_code })
-        try:
-            school = School.objects.get(student_code = student.school_code)
-        except:
-            None
+        form = SettingsForm(initial={'code': student.school_code, 'pf_public': student.pf_public})
+    try:
+        school = School.objects.get(student_code = student.school_code)
+    except:
+        None
+    public_url = request.scheme + '://' + request.get_host() + '/student/view/' + request.user.username
     context = {
         'form': form,
         'school': school,
+        'public_url': public_url,
     }
     return render(request, 'student/settings.html', context)

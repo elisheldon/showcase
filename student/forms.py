@@ -44,6 +44,11 @@ class AddForm(forms.Form):
         return url
 
 class SettingsForm(forms.Form):
+    PF_PUBLIC_CHOICES = (
+        (True, 'Public'),
+        (False, 'Private')
+    )
+    pf_public = forms.ChoiceField(choices = PF_PUBLIC_CHOICES, label=_('Showcase visibility'), widget=forms.Select(), help_text=_('When your Showcase is public, it can be viewed by anyone who visits '), required=False)
     code = forms.CharField(label=_('School code'), required=False, max_length=6)
     
     def clean_code(self):

@@ -6,6 +6,10 @@
 
 {% block scripts %}
   {{ block.super }}
+  <script>
+    window.publicUrl = '{{ public_url }}'
+  </script>
+  <script src='{% static "student/settings.js" %}'></script>
 {% endblock %}
 
 {% block title %}{% trans 'Settings' %}{% endblock %}
@@ -15,7 +19,7 @@
     {% csrf_token %}
     {{ form|crispy }}
     {% if school %}
-      <small class='form-text text-muted'>{% trans 'Currently: ' %}{{ school.name }}</small>
+      <small id='current_school' class='form-text text-muted'>{% trans 'Currently: ' %}{{ school.name }}</small>
       <br>
     {% endif %}
     <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>

@@ -3,7 +3,6 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
-from django.urls import reverse_lazy
 from hashlib import sha1
 
 from teacher.models import School
