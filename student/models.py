@@ -109,7 +109,9 @@ class Photo(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if self.image:
+        ext = os.path.splitext(self.image.name)[1]
+        if self.image and ext.lower() != '.gif':
+            print(self.image)
             img = Image.open(self.image)
             if img.mode != 'RGB':
                 img = img.convert('RGB')

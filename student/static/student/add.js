@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkSubmitReady()
   })
 
-  // add event to check photo uploads
+  // add event to check file  uploads
   document.getElementById('id_file').addEventListener('input', () => {
     renderFilePreview()
     checkSubmitReady()
