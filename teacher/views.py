@@ -85,7 +85,7 @@ def addSchool(request):
                 newschool.save()
                 return HttpResponseRedirect(reverse('teacher:schoolDetails', args={newschool.id}))
             else:
-                similar_schools_distinct = similar_name_schools.distinct()
+                similar_schools_distinct = similar_schools.distinct()
                 form.data = form.data.copy()
                 form.data['confirmed'] = True #next time the user hits submit, it will create the school regardless of possible matches
                 context = {

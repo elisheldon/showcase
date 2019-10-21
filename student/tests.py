@@ -173,7 +173,7 @@ class StudentTestCase(TestCase):
         link = Link.objects.create(url = 'http://deleteme.com')
         item = Item.objects.create(student = student, sub_item = link, title = 'test title', description = 'test description')
         response = self.client.post('/student/remove', dumps({'item_id': item.id}), content_type='application/json')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 202)
         links = Link.objects.all()
         self.assertEqual(len(links), 1)
         items = Item.objects.all()
