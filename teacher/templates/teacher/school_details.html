@@ -23,7 +23,9 @@
     <form id='create_code_form' action='{% url "teacher:createSchoolCode" %}' method='post' onsubmit='submit.disabled = true; return true;'>
       {% csrf_token %}
       <input type='hidden' name='id' value='{{ school.id }}'>
-      <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Create school code' %}</button>
+      <div class='text-center'>
+        <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Create school code' %}</button>
+      </div>
     </form>
   {% else %}
     {% trans 'Showcase accounts are currently limited to serving as the primary point of contact for a single school. This school needs a <b>school staff code</b> that you and other staff members will use to join your school, but another staff member will need to navigate to this page to create it before you can join. That staff member will then serve as the primary point of contact for your school.' %}

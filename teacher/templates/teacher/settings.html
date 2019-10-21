@@ -15,6 +15,8 @@
       <small class='form-text text-muted'>{% blocktrans with name=school.name%}Currently: {{ name }}. Find a different school <a href='{{ url }}'>here</a>.{% endblocktrans %}</small>
       <br>
     {% endif %}
-    <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+    <div class='text-center'>
+      <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+    </div>
   </form>
 {% endblock %}

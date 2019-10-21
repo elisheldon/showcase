@@ -12,5 +12,7 @@
   <br><br>
   {% blocktrans with student_code=school.student_code %}<b>Do not share the staff code with students.</b> Students should use your school's student code, <b>{{student_code}}</b>, to join your school.{% endblocktrans %}
   <br><br>
-  <a href='{% url "teacher:index" %}' class='btn btn-primary'>Continue</a>
+  <div class='text-center'>
+    <a href='{% url "teacher:index" %}' class='btn btn-primary'>Continue</a>
+  </div>
 {% endblock %}

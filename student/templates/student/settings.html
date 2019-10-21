@@ -22,6 +22,8 @@
       <small id='current_school' class='form-text text-muted'>{% trans 'Currently: ' %}{{ school.name }}</small>
       <br>
     {% endif %}
-    <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+    <div class='text-center'>
+      <button type='submit' name='submit' id='submit_form_btn' class='btn btn-primary'>{% trans 'Save' %}</button>
+    </div>
   </form>
 {% endblock %}
