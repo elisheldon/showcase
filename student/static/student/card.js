@@ -35,4 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
   })
+  $('.pinCard').click( async (event) => {
+    const icon = $(event.target) // Icon that triggered the modal
+    const item_id = icon.data('item-id')
+    console.log(item_id)
+    const response = await fetch(window.pinUrl, {
+      method: 'post',
+      body: JSON.stringify({'item_id': item_id}),
+      headers: {"X-CSRFTOKEN": csrftoken},
+    })
+    if(response.status == 204){
+      location.reload()
+    }
+  })
 })

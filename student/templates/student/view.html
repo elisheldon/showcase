@@ -5,8 +5,10 @@
 
 {% block scripts %}
   {{ block.super }}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.js"></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/portfolio.css" %}'>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.css">
 {% endblock %}
 
 {% block title %}{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}{% endblock %}
@@ -14,12 +16,24 @@
 {% block body %}
   <h2>{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}</h2>
   <br>
-  <div class='card-columns' style='width: 100%'>
-  {% for item in items|dictsortreversed:'date_time_added' %}
-    {% include 'student/card.html' with view=True %}   
-  {% endfor %}
+  <div class='bricklayer' style='width: 100%'>
+    {% for item in items|dictsortreversed:'date_time_added' %}
+      {% if item.pinned %}
+        {% include 'student/card.html' with view=True %}   
+      {% endif %}
+    {% endfor %}
+    {% for item in items|dictsortreversed:'date_time_added' %}
+      {% if not item.pinned %}
+        {% include 'student/card.html' with view=True %}   
+      {% endif %}
+    {% endfor %}
   </div>
   {% if items|length_is:'0' %}
     <h4 class='text-center'>This Showcase is empty!</h4>
   {% endif %}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bricklayer = new Bricklayer(document.querySelector('.bricklayer'))
+    })
+  </script>
 {% endblock %}

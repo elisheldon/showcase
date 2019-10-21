@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const bricklayer = new Bricklayer(document.querySelector('.bricklayer'))
   const csrftoken = Cookies.get('csrftoken')
   $('#changePublicButton').click( async () => {
     const response = await fetch(window.publicUrl,{

@@ -62,6 +62,9 @@ class Item(models.Model):
     )
     sub_item_id = models.PositiveIntegerField()
     sub_item = GenericForeignKey('sub_item_type', 'sub_item_id')
+    pinned = models.BooleanField(
+        default = False,
+    )
     def __str__(self):
         return self.title + ' (' + self.student.user.username + ')'
 

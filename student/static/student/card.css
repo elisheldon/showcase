@@ -7,7 +7,8 @@
 }
 
 .card{
-  max-width: 18rem;
+  max-width: 24rem;
+  margin-bottom: 10px;
 }
 
 .text-muted{
@@ -18,13 +19,18 @@
   padding-top: 0;
 }
 
-.removeLink{
+.pinCard, .removeLink{
   text-decoration: none !important;
   float: right;
+  margin-left: 5px;
 }
 
 .item-icon{
   font-size: 3em;
   margin-top: 16px;
   margin-bottom: 16px;
+}
+
+.pinned{
+  border-width:2px !important;
 }

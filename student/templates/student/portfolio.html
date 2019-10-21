@@ -9,11 +9,14 @@
   <script src='https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js'></script>
   <script src='{% static "student/card.js" %}'></script>
   <script src='{% static "student/portfolio.js" %}'></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.js"></script>
   <link rel='stylesheet' type='text/css' href='{% static "student/portfolio.css" %}'>
   <link rel='stylesheet' type='text/css' href='{% static "student/card.css" %}'>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.css">
   <script>
       window.removeUrl = '{% url "student:remove" %}';
       window.publicUrl = '{% url "student:public" %}';
+      window.pinUrl = '{% url "student:pin" %}';
   </script>
 {% endblock %}
 
@@ -37,10 +40,17 @@
     </h4>
   </div> 
   <br>
-  <div class='card-columns' style='width: 100%'>
-  {% for item in items|dictsortreversed:'date_time_added' %}
-    {% include 'student/card.html' with view=False %}   
-  {% endfor %}
+  <div class='bricklayer' style='width: 100%'>
+    {% for item in items|dictsortreversed:'date_time_added' %}
+      {% if item.pinned %}
+        {% include 'student/card.html' with view=False %}   
+      {% endif %}
+    {% endfor %}
+    {% for item in items|dictsortreversed:'date_time_added' %}
+      {% if not item.pinned %}
+        {% include 'student/card.html' with view=False %}   
+      {% endif %}
+    {% endfor %}
   </div>
   {% if items|length_is:'0' %}
     <h4 class='text-center'>Welcome to Showcase! Add something to your portfolio by <a href='{% url "student:add" %}'>clicking here</a>.</h4>

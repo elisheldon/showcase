@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 
-<div class='card text-center mx-auto border-primary' id='card-{{ item.id }}'>
+<div class='card text-center mx-auto border-primary {% if item.pinned %}pinned{% endif %}' id='card-{{ item.id }}' >
   <div style='position: relative'>
     {% if item.sub_item_type|stringformat:"s" == "link" %}
       {% if item.sub_item.image %}
@@ -29,10 +29,17 @@
   </div>
 
   <div class='card-footer text-muted text-left'>
-    {% trans 'Added on ' %}{{ item.date_time_added|date }}
+    {% trans 'Added ' %}{{ item.date_time_added|date }}
     {% if not view %}
       <a href='#' class='removeLink' data-toggle='modal' data-target='#removeModal' data-item-title='{{ item.title }}' data-item-id='{{ item.id }}'>
-          <i class='fas fa-trash-alt text-primary'></i>
+        <i class='fas fa-trash-alt text-primary'></i>
+      </a>
+      <a href='#' class='pinCard'>
+        {% if item.pinned %}
+          <i class='fas fa-star' data-item-id='{{ item.id }}'></i>
+        {% else %}
+          <i class='far fa-star' data-item-id='{{ item.id }}'></i>
+        {% endif %}
       </a>
     {% endif %}
   </div>

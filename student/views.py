@@ -321,3 +321,16 @@ def settings(request):
         'public_url': public_url,
     }
     return render(request, 'student/settings.html', context)
+
+def pin(request):
+    if not student_check(request):
+        return HttpResponseRedirect(reverse('authentication:index'))
+    item_id = json.loads(request.body)['item_id']
+    student = Student.objects.get(user = request.user)
+    try:
+        item = Item.objects.get(pk = item_id, student = student)
+    except:
+        raise PermissionDenied
+    item.pinned = not item.pinned
+    item.save()
+    return HttpResponse(status=204)
