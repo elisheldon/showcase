@@ -31,3 +31,7 @@
   position: relative;
   transform: translateY(.3em)
 }
+
+.breakable {
+  word-break: break-all;
+}

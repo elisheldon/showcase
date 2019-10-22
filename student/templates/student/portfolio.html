@@ -70,7 +70,7 @@
         {% if public %}
           <div class='modal-body'>
             {% blocktrans %}
-              Your Showcase is set to <b>public</b>, and can be viewed by anyone who visits <a href="{{ link }}" target="_blank">{{ link }}</a>. Do you want to change your Showcase to <b>private</b>?
+              Your Showcase is set to <b>public</b>, and can be viewed by anyone who visits <a href="{{ link }}" class='breakable' target="_blank">{{ link }}</a>. Do you want to change your Showcase to <b>private</b>?
             {% endblocktrans %}
           </div>
           <div class='modal-footer'>
@@ -80,7 +80,7 @@
         {% else %}
           <div class='modal-body'>
             {% blocktrans %}
-              Your Showcase is set to <b>private</b>. Do you want to change your Showcase to <b>public</b>? This will allow anyone to see your Showcase at <a href="{{ link }}" target="_blank">{{ link }}</a>.
+              Your Showcase is set to <b>private</b>. Do you want to change your Showcase to <b>public</b>? This will allow anyone to see your Showcase at <a href="{{ link }}" class='breakable' target="_blank">{{ link }}</a>.
             {% endblocktrans %}
           </div>
           <div class='modal-footer'>
