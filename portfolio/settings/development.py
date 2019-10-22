@@ -19,3 +19,43 @@ ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.15', 'localhost',]
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'file': {
+            'format': '%(asctime)s %(name)s:%(lineno)-4d %(levelname)-8s %(message)s'
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'file',
+        },
+    },
+    'loggers': {
+        'student': {
+            'level': 'INFO',
+            'handlers': ['file'],
+            'propagate': False,
+        },
+        'teacher': {
+            'level': 'INFO',
+            'handlers': ['file'],
+            'propagate': False,
+        },
+        'preview': {
+            'level': 'INFO',
+            'handlers': ['file'],
+            'propagate': False,
+        },
+        'authentication': {
+            'level': 'INFO',
+            'handlers': ['file'],
+            'propagate': False,
+        },
+    },
+}

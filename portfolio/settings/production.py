@@ -1,4 +1,5 @@
 from .base import *
+from boto3.session import Session
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
@@ -19,6 +20,7 @@ DATABASES = {
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_KEY')
+AWS_REGION_NAME = 'us-west-2'
 AWS_STORAGE_BUCKET_NAME = 'elasticbeanstalk-us-west-2-315679056419'
 AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
@@ -40,3 +42,57 @@ DEFAULT_FROM_EMAIL = 'Showcase <noreply@showcaseedu.com>'
 
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 SECURE_SSL_REDIRECT = True
+
+boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION_NAME)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'root': {
+        'level': 'ERROR',
+        'handlers': ['console'],
+    },
+    'formatters': {
+        'aws': {
+            'format': u"%(name)s:%(lineno)-4d %(levelname)-8s %(message)s",
+            'datefmt': "%Y-%m-%d %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'watchtower': {
+            'level': 'DEBUG',
+            'class': 'watchtower.CloudWatchLogHandler',
+                     'boto3_session': boto3_session,
+                     'log_group': 'Showcase',
+                     'stream_name': 'ShowcaseStream',
+            'formatter': 'aws',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'aws',
+        }
+    },
+    'loggers': {
+        'student': {
+            'level': 'INFO',
+            'handlers': ['watchtower'],
+            'propagate': False,
+        },
+        'teacher': {
+            'level': 'INFO',
+            'handlers': ['watchtower'],
+            'propagate': False,
+        },
+        'preview': {
+            'level': 'INFO',
+            'handlers': ['watchtower'],
+            'propagate': False,
+        },
+        'authentication': {
+            'level': 'INFO',
+            'handlers': ['watchtower'],
+            'propagate': False,
+        },
+    },
+}

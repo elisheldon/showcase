@@ -14,10 +14,13 @@ import google.oauth2.credentials
 import google_auth_oauthlib.flow
 import os
 import requests
+import logging
 
 from .models import Student, Item, Link, Gallery, Photo, Document
 from .forms import AddForm, SettingsForm
 from teacher.models import School, Staff
+
+logger = logging.getLogger(__name__)
 
 def student_check(request):
     # checks to see if the current user is in the students group
@@ -66,11 +69,18 @@ def add(request):
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,
                     }
+                    logger.warn('limit_link_count')
                     return render(request, 'student/add.html', context)
                 url = form.cleaned_data.get('url')
                 image = form.cleaned_data.get('image')
                 link = Link.objects.create(url = url, image = image)
                 item = Item.objects.create(student = student, sub_item = link, title = title, description = description)
+                if sub_item_type == 'link':
+                    logger.info('add_link')
+                elif sub_item_type == 'drive':
+                    logger.info('add_gdrive')
+                else:
+                    logger.info('add_onedrive')
             if sub_item_type == 'gallery':
                 galleryType = ContentType.objects.get_for_model(Gallery)
                 galleryCount = Item.objects.filter(student = student, sub_item_type = galleryType).count()
@@ -82,6 +92,10 @@ def add(request):
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,
                     }
+                    if photoCount >= 30:
+                        logger.warn('limit_photo_count')
+                    else:
+                        logger.warn('limit_gallery_count')
                     return render(request, 'student/add.html', context)
                 for file in request.FILES.getlist('photos'):
                     if file.size > 1024*1024*5:
@@ -90,6 +104,7 @@ def add(request):
                             'form': form,
                             'googleOAuthToken': googleOAuthToken,
                         }
+                        logger.warn('limit_photo_size')
                         return render(request, 'student/add.html', context)
                     try:
                         im = Image.open(file)
@@ -100,10 +115,13 @@ def add(request):
                             'form': form,
                             'googleOAuthToken': googleOAuthToken,
                         }
+                        logger.warn('error_photo_valid')
                         return render(request, 'student/add.html', context)
                 gallery = Gallery.objects.create()
+                logger.info('add_gallery')
                 for file in request.FILES.getlist('photos'):
                     photo = Photo.objects.create(image = file, parent_gallery = gallery)
+                    logger.info('add_photo')
                     if not gallery.cover:
                         gallery.cover = photo
                         gallery.save()
@@ -117,6 +135,7 @@ def add(request):
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,
                     }
+                    logger.warn('limit_doc_count')
                     return render(request, 'student/add.html', context)
                 file = request.FILES['file']
                 if file.size > 1024*1024*2:
@@ -127,6 +146,7 @@ def add(request):
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,
                     }
+                    logger.warn('limit_doc_size')
                     return render(request, 'student/add.html', context)
                 mime = magic.from_buffer(file.read(), mime=True)
                 if mime not in ['application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-powerpoint','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.oasis.opendocument.text','application/vnd.oasis.opendocument.presentation','application/vnd.oasis.opendocument.spreadsheet','application/pdf','text/plain','text/csv','text/html','application/x-iwork-keynote-sffkey','application/x-iwork-pages-sffpages','application/x-iwork-numbers-sffnumbers']:
@@ -137,6 +157,7 @@ def add(request):
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,
                     }
+                    logger.warn('error_doc_mime')
                     return render(request, 'student/add.html', context)
                 extension = pathlib.Path(file.name).suffix
                 if extension[1:] in ['doc','docx','odt','txt','pages']:
@@ -157,9 +178,11 @@ def add(request):
                         'form': form,
                         'googleOAuthToken': googleOAuthToken,
                     }
+                    logger.warn('error_doc_ext')
                     return render(request, 'student/add.html', context)
                 document = Document.objects.create(file = file, icon = icon)
                 item = Item.objects.create(student = student, sub_item = document, title = title, description = description)
+                logger.info('add_doc')
             messages.add_message(request, messages.SUCCESS, _('Successfully added %(title)s to your portfolio.') % {'title': title})
             return HttpResponseRedirect(reverse('student:add'))
         else:
@@ -187,6 +210,7 @@ def remove(request):
         item = Item.objects.get(pk = item_id, student = student)
     except:
         raise PermissionDenied
+    logger.info('delete_item')
     item.sub_item.delete()
     return HttpResponse(status=202)
 
@@ -232,6 +256,8 @@ def public(request):
         student.save()
     except:
         raise PermissionDenied
+    if student.pf_public:
+        logger.info('make_public_lock')
     return HttpResponse(status=202)
 
 def view(request, username):
@@ -244,6 +270,9 @@ def view(request, username):
                 staff = Staff.objects.get(user = request.user)
                 if staff in school.staff.all():
                     teacher_view = True
+                    logger.info('view_teacher')
+        if student.pf_public:
+            logger.info('view_public')
         if not student.pf_public and not teacher_view:
             raise ValueError('private') #just triggers the except below
     except:
@@ -297,14 +326,17 @@ def settings(request):
             if code and code != student.school_code:
                 student.school_code = code
                 school = School.objects.get(student_code = code)
+                logger.info('change_student_code')
                 messages.add_message(request, messages.SUCCESS, _('Successfully joined ') + school.name)
             elif code != student.school_code: # if the student removed their school code
                 student.school_code = ''
+                logger.info('remove_student_code')
                 messages.add_message(request, messages.SUCCESS, _('Your account is no longer linked with a school.'))
             if pf_public != str(student.pf_public):
                 student.pf_public = pf_public
                 if pf_public == 'True':
                     messages.add_message(request, messages.SUCCESS, _('Your Showcase is now public'))
+                    logger.info('make_public_settings')
                 else:
                     messages.add_message(request, messages.SUCCESS, _('Your Showcase is now private'))
             student.save()
@@ -333,6 +365,7 @@ def pin(request):
         raise PermissionDenied
     item.pinned = not item.pinned
     item.save()
+    logger.info('pin_item')
     return HttpResponse(status=202)
 
 def edit(request):
@@ -347,12 +380,11 @@ def edit(request):
         item = Item.objects.get(pk = item_id, student = student)
     except:
         raise PermissionDenied
-    print(item_title)
-    print(item.title)
     if item_title != item.title or item_description != item.description:
         item.title = item_title
         item.description = item_description
         item.save()
+        logger.info('edit_item')
         return HttpResponse(status=202)
     else:
         return HttpResponse(status=400)

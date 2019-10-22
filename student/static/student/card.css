@@ -34,3 +34,7 @@
 .pinned{
   border-width:2px !important;
 }
+
+.card-img-top{
+  image-orientation: from-image; 
+}

@@ -8,11 +8,14 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext as _
 from hashlib import sha1
 import json
+import logging
 
 from teacher.models import Staff, School
 from student.models import Student
 from .forms import LoginForm, RegistrationForm, SocialForm
 from student.views import student_check
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def index(request):
@@ -45,6 +48,7 @@ def loginUser(request):
                 elif request.user.groups.filter(name='staff').exists():
                     return HttpResponseRedirect(reverse('teachers:index'))
                 else:
+                    logger.error('login_not_staff_or_student')
                     return HttpResponse('You are not a student or a staff member, something is wrong!')
             else:
                 messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))

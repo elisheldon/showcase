@@ -24,3 +24,7 @@
     margin-top: 30px !important;
   }
 }
+
+.card-img-top{
+  image-orientation: from-image; 
+}

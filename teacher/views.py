@@ -10,10 +10,13 @@ import csv
 import os
 import random
 import string
+import logging
 
 from .forms import SchoolSearchForm, AddSchoolForm, SettingsForm
 from .models import School, Staff
 from student.models import Student
+
+logger = logging.getLogger(__name__)
 
 def teacher_check(request):
     # checks to see if the current user is in the staff group
@@ -51,11 +54,12 @@ def schoolSearch(request):
             schools = School.objects.filter(name__icontains=name, city__icontains=city, state__icontains=state, zip__contains=zip)[:100]
             error = ''
             if schools.count() == 0:
+                logger.warn('search_school_no_results')
                 error = _('No schools found matching your search.')
             context = {
-            'form': form,
-            'schools': schools,
-            'error': error,
+                'form': form,
+                'schools': schools,
+                'error': error,
             }
             return render(request, 'teacher/school_search.html', context)
     else:
@@ -83,6 +87,7 @@ def addSchool(request):
             if similar_schools.count() == 0 or form.cleaned_data.get('confirmed'):
                 newschool = School(name=name, address=address, city=city, state=state, country=country, zip=zip)
                 newschool.save()
+                logger.info('add_school')
                 return HttpResponseRedirect(reverse('teacher:schoolDetails', args={newschool.id}))
             else:
                 similar_schools_distinct = similar_schools.distinct()
@@ -159,6 +164,7 @@ def createSchoolCode(request):
         context = {
             'school': school,
         }
+        logger.info('create_school_code')
         return render(request, 'teacher/school_code.html', context)
     else:
         messages
@@ -191,13 +197,16 @@ def settings(request):
                 code = form.cleaned_data.get('code')
                 school = School.objects.get(code = code)
                 first_code = True
-            if staff in school.owners.all(): # if the user is the owner of this school
-                if len(school.staff.all()) > 1: # if the user is not the only staff member of this school
+                logger.info('add_staff_code_member')
+            if staff in school.owners.all(): # if the user is the owner of their current school
+                if len(school.staff.all()) > 1: # if the user is not the only staff member of their current school
                     school.staff.remove(staff) # remove the user as a staff member
                     school.owners.add(school.staff.first()) # make the next staff member the new owner
                     school.owners.remove(staff) # remove the user as the owner
+                    logger.info('change_staff_code_fallback')
                 else:
                     messages.add_message(request, messages.ERROR, _('You cannot change schools while you are the primary point of contact for your current school with no other staff members to replace you.'))
+                    logger.warn('error_staff_code_only_member')
                     context = {
                         'form': form,
                         'school': school,
@@ -205,6 +214,7 @@ def settings(request):
                     return render(request, 'teacher/settings.html', context)
             elif not first_code:
                 school.staff.remove(staff)
+                logger.info('remove_staff_code_member')
             code = form.cleaned_data.get('code')
             school = School.objects.get(code = code)
             school.staff.add(staff)

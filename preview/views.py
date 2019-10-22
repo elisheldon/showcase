@@ -8,8 +8,11 @@ import requests
 from webpreview import web_preview
 from json import loads
 import tldextract
+import logging
 
 from preview.models import BlacklistUrl
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def index(request):
@@ -21,6 +24,7 @@ def index(request):
         banned = BlacklistUrl.objects.filter(domain=f'{url_obj.domain}.{url_obj.suffix}')
         if banned:
             return JsonResponse({'title': 'This URL has been blocked', 'description': 'Make sure you are only adding school-approriate content to your portfolio - this should be your best work!', 'image': '', 'url': ''})
+            logger.warn('hit_blacklist')
         title, description, image = web_preview(url, parser='html.parser', headers = {'User-Agent': 'Mozilla/5.0'})
         return JsonResponse({'title': title, 'description': description, 'image': image, 'url': url})
     except:
