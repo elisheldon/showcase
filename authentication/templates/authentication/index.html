@@ -18,8 +18,8 @@
       <h1 class='headerTitle'>Showcase</h1>
       <h2 class='headerSubtitle'>{% trans 'A student-owned digital portfolio' %}</h2>
       <br>
-      <button type="button" class="btn btn-primary btn-lg" data-tab="loginTab">Log in</button>
-      <button type="button" class="btn btn-primary btn-lg" data-tab="registerTab">Register</button>
+      <button type="button" class="btn btn-primary btn-lg" data-tab="loginTab">{% trans 'Log in' %}</button>
+      <button type="button" class="btn btn-primary btn-lg" data-tab="registerTab">{% trans 'Register' %}</button>
     </div>
   </header>
 {% endblock %}
@@ -40,8 +40,8 @@
               <div role="tabpanel" class="tab-pane active" id="loginTab">
                 <br>
                 <div class='text-center' style='width:100%'>
-                  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;'></a>
-                  <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;'></a>
+                  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;' alt='{% trans "Log in with Google" %}'></a>
+                  <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;' alt='{% trans "Log in with Microsoft" %}'></a>
                   <br><br>
                   <h3>or</h3>
                 </div>
@@ -59,8 +59,8 @@
               <div role="tabpanel" class="tab-pane" id="registerTab">
                 <br>
                 <div class='text-center' style='width:100%'>
-                  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;'></a>
-                  <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;'></a>
+                  <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;' alt='{% trans "Log in with Google" %}'></a>
+                  <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;' alt='{% trans "Log in with Microsoft" %}'></a>
                   <br><br>
                   <h3>or</h3>
                 </div>
@@ -89,7 +89,7 @@
       </div>
     {% endblocktrans %}
       <div class='col-12 col-md-5 text-center'>
-        <a href='{{ request.scheme }}://{{ request.get_host }}{{ request.path }}student/view/zaharah'><img src='{% static "authentication/zahara.png" %}' style='width: 100%; height: auto;'></a>
+        <a href='{{ request.scheme }}://{{ request.get_host }}{{ request.path }}student/view/zaharah'><img src='{% static "authentication/zahara.png" %}' style='width: 100%; height: auto;' alt='{% trans "Sample Showcase portfolio" %}'></a>
       </div>
   </div>
 <script>
@@ -100,5 +100,4 @@
       $('.nav-tabs a[href="#' + tabTarget + '"]').tab('show');
   });
 </script>
-
 {% endblock %}
