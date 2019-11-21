@@ -1,8 +1,10 @@
 # Showcase
-A digital portfolio platform for students, currently in development at https://showcaseedu.com
+A student-owned digital portfolio, available freely at https://showcaseedu.com
 
-Showcase is a lightweight, student-driven collection of work that represents only those assignments students are proud to share with family, friends and potential employers. In contrast to existing electronic portfolio products, Showcase is not a place for teachers to assign a grade, nor dictate what is included or excluded. Students have complete control over their Showcase portfolio, and never need to include language justifying a low grade or how they plan on improving.
+Showcase is a lightweight, student-driven portfolio that represents only the work students are proud to share.
 
-The primary use case of Showcase is to facilitate students collecting and sharing their work during family conferences, particularly in student-led conferences for middle and high school students. Teachers or schools can set up accounts for students if desired, but students will lead the effort of creating their Showcase portfolio. Showcase will allow students to quickly and easily add work from Google Classroom and Microsoft Office, as well as upload images of physical work and link to any publicly accessibly URL.
+Students can add files from Google Drive and Microsoft OneDrive, upload documents and images of physical work, and link to any publicly accessible link (graphs on Desmos, projects on Code.org, video presentations on YouTube...).
 
-Showcase is a web-based tool first and foremost, with the potential for mobile apps and browser extensions down the road. Showcase will keep the collection of each student's work as long as they desire, so their Showcase portfolio lives beyond just the semester and can even be used when they start applying to jobs and colleges in high school.
+Showcase is not a place for teachers to assign a grade, nor decide what is included. Students have complete control over their Showcase portfolio, and never need to justify a low grade or include a plan to improve. With this control, students can share their Showcase portfolios at family conferences, with potential employers or even when applying to colleges.
+
+Students, teachers and other school staff members can join their school using a school code. Students' portfolios can be viewed by all school staff members, and students can additionally choose to share their portfolios publicly with a personal URL.
