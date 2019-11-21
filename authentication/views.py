@@ -37,6 +37,7 @@ def index(request):
 def loginUser(request):
     if request.method == 'POST':
         form = LoginForm(request.POST, prefix='login')
+        print(form.data)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -46,7 +47,7 @@ def loginUser(request):
                 if request.user.groups.filter(name='students').exists():
                     return HttpResponseRedirect(reverse('student:portfolio'))
                 elif request.user.groups.filter(name='staff').exists():
-                    return HttpResponseRedirect(reverse('teachers:index'))
+                    return HttpResponseRedirect(reverse('teacher:index'))
                 else:
                     logger.error('login_not_staff_or_student')
                     return HttpResponse('You are not a student or a staff member, something is wrong!')
@@ -54,10 +55,11 @@ def loginUser(request):
                 messages.add_message(request, messages.ERROR, _('Your username or password is incorrect, please try again.'))
                 return HttpResponseRedirect(reverse('authentication:loginUser'))
         else:
-            messages.add_message(request, messages.ERROR, _('There was an error logging you in, please try again.'))
+            #messages.add_message(request, messages.ERROR, _('There was an error logging you in, please try again.'))
+            messages.add_message(request, messages.ERROR, form.errors)
             return HttpResponseRedirect(reverse('authentication:loginUser'))
     else:
-        form = LoginForm()
+        form = LoginForm(prefix='login')
         context = {
             'loginForm': form,
         }

@@ -9,18 +9,18 @@
 {% block body %}
   <h2>Log in to Showcase</h2>
   <div class='text-center' style='width:100%'>
-      <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;'></a>
-      <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;'></a>
-      <br><br>
-      <h3>or</h3>
+    <a href='{% url "social:begin" "google-oauth2" %}'><img src='{% static "authentication/google.png" %}' style='height: 46px; width: auto;'></a>
+    <a href='{% url "social:begin" "microsoft-graph" %}'><img src='{% static "authentication/microsoft.svg" %}' style='height: 40px; width: auto;'></a>
+    <br><br>
+    <h3>or</h3>
+  </div>
+  <form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off' onsubmit='submit.disabled = true; return true;'>
+    {% csrf_token %}
+    {{ loginForm|crispy }}
+    <div class='text-center'>
+      <button type='submit' name='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
     </div>
-    <form action='{% url "authentication:loginUser" %}' method='post' autocomplete='off' onsubmit='submit.disabled = true; return true;'>
-      {% csrf_token %}
-      {{ loginForm|crispy }}
-      <div class='text-center'>
-        <button type='submit' name='submit' class='btn btn-primary'>{% trans 'Login' %}</button>
-      </div>
-    </form>
-    <br>
-    <p>Forgot your password? <a href='{% url "authentication:password_reset" %}'>{% trans 'Click here to reset it.' %}</a></p>
+  </form>
+  <br>
+  <p>Forgot your password? <a href='{% url "authentication:password_reset" %}'>{% trans 'Click here to reset it.' %}</a></p>
 {% endblock %}

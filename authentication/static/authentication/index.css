@@ -8,6 +8,10 @@
   background-size: cover;
 }
 
+body{
+  min-width: 320px;
+}
+
 .headerTitle{
   font-size: 4em;
   color: #fff;
@@ -18,7 +22,7 @@
   color: #fff;
 }
 
-button{
+.btn-primary{
   margin: 10px;
 }
 

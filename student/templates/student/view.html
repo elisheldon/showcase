@@ -35,5 +35,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       const bricklayer = new Bricklayer(document.querySelector('.bricklayer'))
     })
+    const linkImgError = (image) => {
+      image.outerHTML = "<i class='fas fa-link item-icon'></i>"
+      return true
+    }
   </script>
 {% endblock %}
