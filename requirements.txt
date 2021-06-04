@@ -1,4 +1,4 @@
-Django==2.2.20
+Django==2.2.21
 webpreview==1.6.0
 tldextract==2.2.1
 django-crispy-forms==1.7.2
