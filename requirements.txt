@@ -1,3 +1,4 @@
+cryptography==1.4
 Django==2.2.24
 webpreview==1.6.0
 tldextract==2.2.1
