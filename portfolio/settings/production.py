@@ -5,7 +5,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = os.environ['DJANGO_DEBUG']
 
-ALLOWED_HOSTS = ['127.0.0.1', 'showcase-env.pb9jd7myyh.us-west-2.elasticbeanstalk.com', 'showcase-staging.pb9jd7myyh.us-west-2.elasticbeanstalk.com', 'www.showcaseedu.com', 'showcaseedu.com', '192.168.1.15', 'localhost', 'staging.showcaseedu.com']
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': {
@@ -21,7 +21,7 @@ DATABASES = {
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_KEY')
 AWS_REGION_NAME = 'us-west-2'
-AWS_STORAGE_BUCKET_NAME = 'elasticbeanstalk-us-west-2-315679056419'
+AWS_STORAGE_BUCKET_NAME = 'showcase-s3-bucket'
 AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
@@ -42,6 +42,7 @@ DEFAULT_FROM_EMAIL = 'Showcase <noreply@showcaseedu.com>'
 
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION_NAME)
 
