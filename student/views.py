@@ -60,6 +60,7 @@ def add(request):
             title = form.cleaned_data.get('title')
             description = form.cleaned_data.get('description')
             sub_item_type = form.cleaned_data.get('sub_item_type')
+            
             if sub_item_type == 'link' or sub_item_type == 'drive' or sub_item_type == 'onedrive':
                 linkType = ContentType.objects.get_for_model(Link)
                 linkCount = Item.objects.filter(student = student, sub_item_type = linkType).count()

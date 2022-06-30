@@ -3,15 +3,15 @@
 
 <div class='card text-center mx-auto border-primary {% if item.pinned %}pinned{% endif %}' id='card-{{ item.id }}' >
   <div style='position: relative'>
-    {% if item.sub_item_type|stringformat:"s" == "link" %}
+    {% if item.sub_item_type|stringformat:"s" == "student | link" %}
       {% if item.sub_item.image %}
         <img src='{{ item.sub_item.image }}' class='card-img-top' onerror='linkImgError(this)' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
       {% else %}
         <i class='fas fa-link item-icon'></i>
       {% endif %}
-    {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
+    {% elif item.sub_item_type|stringformat:"s" == "student | gallery" %}
       <img src='{{ item.sub_item.cover.image.url }}' class='card-img-top' alt='{% blocktrans %}Picture of {{ item.title }}{% endblocktrans %}'>
-    {% elif item.sub_item_type|stringformat:"s" == "document" %}
+    {% elif item.sub_item_type|stringformat:"s" == "student | document" %}
       <i class='{{ item.sub_item.icon }} item-icon'></i>
     {% endif %}
     <div class='card-body text-left'>
@@ -19,11 +19,11 @@
       <p id='card_description' class='card-text'>{{ item.description }}</p>
     </div>
 
-    {% if item.sub_item_type|stringformat:"s" == "link" %}
+    {% if item.sub_item_type|stringformat:"s" == "student | link" %}
       <a href='{{ item.sub_item.url }}' target='_blank' class='stretched-link'></a>
-    {% elif item.sub_item_type|stringformat:"s" == "gallery" %}
+    {% elif item.sub_item_type|stringformat:"s" == "student | gallery" %}
       <a href='{% url "student:gallery" item.id %}' class='stretched-link'></a>
-    {% elif item.sub_item_type|stringformat:"s" == "document" %}
+    {% elif item.sub_item_type|stringformat:"s" == "student | document" %}
       <a href='{{ item.sub_item.file.url }}' target='_blank' class='stretched-link'></a>
     {% endif %}
   </div>
