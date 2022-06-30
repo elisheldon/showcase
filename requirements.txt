@@ -3,9 +3,8 @@ Django==4.0.5
 webpreview==1.6.0
 tldextract==3.3.0
 django-crispy-forms==1.14.0
-pillow==8.2.0
+pillow==8.3.2
 django-cleanup==6.0.0
-psycopg2-binary==2.8.6
 django-storages==1.12.3
 boto3==1.24.20
 social-auth-app-django==5.0.0
