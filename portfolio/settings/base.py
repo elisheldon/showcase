@@ -1,4 +1,5 @@
 import os
+import logging.config
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -79,13 +80,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Los_Angeles'
-
 USE_I18N = True
 
 USE_L10N = True
-
-USE_TZ = True
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
@@ -130,3 +127,33 @@ SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = '18c3c49f-bef0-495b-81bd-e0390698acf8'
 SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = os.environ['AZURE_SECRET']
 
 SOCIAL_AUTH_UUID_LENGTH = 3
+
+# Logging Configuration
+
+# Clear prev config
+LOGGING_CONFIG = None
+
+# Get loglevel from env
+LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'info').upper()
+
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': LOGLEVEL,
+            'handlers': ['console',],
+        },
+    },
+})

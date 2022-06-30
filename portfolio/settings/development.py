@@ -1,4 +1,6 @@
 from .base import *
+from django.db.backends.oracle.base import DatabaseOperations
+DatabaseOperations.max_name_length = lambda s: 120 # Without this, Django attempts to query truncated table names within the Oracle DB 
 
 SECRET_KEY = '^cc%7ak(_ee2de6o(-us%#emmf=%0(t+8^%7h8ukvp%ibvg!z!'
 

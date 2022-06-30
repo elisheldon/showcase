@@ -1,16 +1,18 @@
-cryptography==3.3.2
-Django==2.2.28
+cryptography==37.0.2
+Django==4.0.5
 webpreview==1.6.0
-tldextract==2.2.1
-django-crispy-forms==1.7.2
+tldextract==3.3.0
+django-crispy-forms==1.14.0
 pillow==8.2.0
-django-cleanup==4.0.0
-psycopg2-binary==2.8.3
-django-storages==1.7.2
-boto3==1.9.242
-social-auth-app-django==3.1.0
+django-cleanup==6.0.0
+psycopg2-binary==2.8.6
+django-storages==1.12.3
+boto3==1.24.20
+social-auth-app-django==5.0.0
 python-magic==0.4.15
-google-api-python-client==1.7.11
-google-auth-oauthlib==0.4.1
-watchtower==0.7.3
-# python-magic-bin==0.4.14 works on and is needed on  Windows, does not work on Linux
+google-api-python-client==2.52.0
+google-auth-oauthlib==0.5.2
+watchtower==3.0.0
+gunicorn==20.1.0
+cx-Oracle==8.3.0
+#python-magic-bin==0.4.14 #works on and is needed on Mac and Windows, does not work on Linux

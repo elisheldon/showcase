@@ -1,20 +1,20 @@
 from .base import *
 from boto3.session import Session
+from django.db.backends.oracle.base import DatabaseOperations
+DatabaseOperations.max_name_length = lambda s: 120 # Without this, Django attempts to query truncated table names within the Oracle DB 
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = os.environ['DJANGO_DEBUG']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['showcaseedu.com', 'localhost', 'www.showcaseedu.com']
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['RDS_DB_NAME'],
-        'USER': os.environ['RDS_USERNAME'],
-        'PASSWORD': os.environ['RDS_PASSWORD'],
-        'HOST': os.environ['RDS_HOSTNAME'],
-        'PORT': os.environ['RDS_PORT'],
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': os.environ['ORACLE_NAME'],
+        'USER': os.environ['ORACLE_USERNAME'],
+        'PASSWORD': os.environ['ORACLE_PASSWORD'],
     }
 }
 
@@ -45,55 +45,3 @@ SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION_NAME)
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'root': {
-        'level': 'ERROR',
-        'handlers': ['console'],
-    },
-    'formatters': {
-        'aws': {
-            'format': u"%(name)s:%(lineno)-4d %(levelname)-8s %(message)s",
-            'datefmt': "%Y-%m-%d %H:%M:%S"
-        },
-    },
-    'handlers': {
-        'watchtower': {
-            'level': 'DEBUG',
-            'class': 'watchtower.CloudWatchLogHandler',
-                     'boto3_session': boto3_session,
-                     'log_group': 'Showcase',
-                     'stream_name': 'ShowcaseStream',
-            'formatter': 'aws',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'aws',
-        }
-    },
-    'loggers': {
-        'student': {
-            'level': 'INFO',
-            'handlers': ['watchtower'],
-            'propagate': False,
-        },
-        'teacher': {
-            'level': 'INFO',
-            'handlers': ['watchtower'],
-            'propagate': False,
-        },
-        'preview': {
-            'level': 'INFO',
-            'handlers': ['watchtower'],
-            'propagate': False,
-        },
-        'authentication': {
-            'level': 'INFO',
-            'handlers': ['watchtower'],
-            'propagate': False,
-        },
-    },
-}
