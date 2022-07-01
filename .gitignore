@@ -133,4 +133,7 @@ blacklist.txt
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+!.elasticbeanstalk/*.global.ymlvenv/
+
+# Mac stuff
+.DS_Store

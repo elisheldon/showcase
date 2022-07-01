@@ -17,7 +17,7 @@
   <h2>{% blocktrans %}{{ name }}'s Showcase{% endblocktrans %}</h2>
   <br>
   <div class='bricklayer' style='width: 100%'>
-    {% for item in items|dictsortreversed:'date_time_added' %}
+    {% for item in items|dictsortreversed:'date_time_added' %}       
       {% if item.pinned %}
         {% include 'student/card.html' with view=True %}   
       {% endif %}
