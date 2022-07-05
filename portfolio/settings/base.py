@@ -105,11 +105,9 @@ MEDIA_LOCATION = 'uploads'
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 DEFAULT_FILE_STORAGE = 'portfolio.storage_backends.PublicMediaStorage'
 
-EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ['SES_USERNAME']
-EMAIL_HOST_PASSWORD = os.environ['SES_PASSWORD']
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = 'us-west-2'
+AWS_SES_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com'
 DEFAULT_FROM_EMAIL = 'Showcase <noreply@showcaseedu.com>'
 
 boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, region_name=AWS_REGION_NAME)
