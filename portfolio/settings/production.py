@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = os.environ['DJANGO_DEBUG']
+DEBUG = False
 
 ALLOWED_HOSTS = ['showcaseedu.com', 'localhost', 'www.showcaseedu.com']
 
